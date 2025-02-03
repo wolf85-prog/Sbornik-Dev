@@ -21,6 +21,7 @@ export default function RootLayout() {
         <Drawer.Screen
             name="home"
             options={{
+                headerShown: false,
                 drawerLabel: 'Главная',
                 title: 'Главная',
                 drawerIcon: ({size, color})=>(
