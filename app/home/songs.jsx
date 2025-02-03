@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const AboutScreen = () => {
+const SongsScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>About screen</Text>
+      <Text style={styles.text}>Песни по алфвиту</Text>
     </View>
   )
 }
 
-export default AboutScreen
+export default SongsScreen
 
 const styles = StyleSheet.create({
     container: {
