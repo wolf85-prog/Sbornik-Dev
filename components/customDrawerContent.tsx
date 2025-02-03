@@ -34,7 +34,7 @@ export default function CustomDrawerContent(props:any) {
       </DrawerContentScrollView>
 
       <Pressable onPress={closeDrawer} style={{padding: 20, paddingBottom: bottom+10}}>
-        <Text>Logout</Text>
+        <Text>Выход</Text>
       </Pressable>
     </View>
   )
