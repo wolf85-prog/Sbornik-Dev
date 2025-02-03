@@ -2,19 +2,28 @@ import { Stack } from "expo-router";
 import { Drawer } from 'expo-router/drawer';
 import CustomDrawerContent from '../components/customDrawerContent';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Image } from 'react-native'
+import { Image, View } from 'react-native'
 
 export default function RootLayout() {
   return (
     <Drawer
         screenOptions={{
-            headerShown: true,
+            headerShown: false,
             drawerLabelStyle: {
                 marginLeft: 5
             },
-            // drawerActiveBackgroundColor: 'gray',
-            // drawerActiveTintColor: 'white',
-            // drawerInactiveTintColor: 'white'
+            swipeEdgeWidth : 0,
+
+            drawerContentStyle: {
+                backgroundColor: '#000',
+              },
+            drawerStyle: {
+                backgroundColor: '#000',
+              },
+
+            drawerActiveBackgroundColor: 'gray',
+            drawerActiveTintColor: 'white',
+            drawerInactiveTintColor: 'white'
         }}
         drawerContent={CustomDrawerContent}
     >
@@ -46,6 +55,11 @@ export default function RootLayout() {
         <Drawer.Screen
             name="about"
             options={{
+                headerShown: true,
+                headerTintColor: '#fff', //цвет заголовка
+                headerStyle: {
+                    backgroundColor: '#25292e'
+                  }, //цвет фона заголовка
                 drawerLabel: 'О приложении',
                 title: 'About',
                 drawerIcon: ({size, color})=>(

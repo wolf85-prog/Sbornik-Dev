@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-
+import { DrawerToggleButton } from "@react-navigation/drawer";
 
 export default function TabLayout() {
     return (
@@ -21,6 +21,8 @@ export default function TabLayout() {
           name="index"
           options={{
             title: 'Главная',
+            headerShown: true,
+            headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
             tabBarIcon: ({ color, focused }) => (
               <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
             ),
@@ -30,6 +32,8 @@ export default function TabLayout() {
           name="songs"
           options={{
             title: 'Песни',
+            headerShown: true,
+            headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
             tabBarIcon: ({ color, focused }) => (
               <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
             ),
@@ -39,6 +43,8 @@ export default function TabLayout() {
           name="playlist"
           options={{
             title: 'Плейлисты',
+            headerShown: true,
+            headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
             tabBarIcon: ({ color, focused }) => (
               <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
             ),
