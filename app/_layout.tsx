@@ -61,7 +61,7 @@ export default function RootLayout() {
                     backgroundColor: '#25292e'
                   }, //цвет фона заголовка
                 drawerLabel: 'О приложении',
-                title: 'About',
+                title: 'О приложении',
                 drawerIcon: ({size, color})=>(
                     <Image source={require('../assets/icons/eye.png')} color={color}  style={{ width: 25, height: 25, }} />
                 )
