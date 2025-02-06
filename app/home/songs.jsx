@@ -1,7 +1,10 @@
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native'
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react'
 
 const SongsScreen = () => {
+  const router = useRouter();
+
   let state = {
     data:[
         {
@@ -69,7 +72,7 @@ const SongsScreen = () => {
 
   function Item({ item }) {
     return (
-      <View style={styles.listItem}>
+      <TouchableOpacity style={styles.listItem} onPress={()=> {router.push('/home/song/details')}} >
         <Image source={{uri:item.photo}}  style={{width:60, height:60,borderRadius:30}} />
         <View style={{alignItems:"center",flex:1}}>
           <Text style={{fontWeight:"bold"}}>{item.name}</Text>
@@ -78,7 +81,7 @@ const SongsScreen = () => {
             <Text style={{color:"green"}}>Call</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </TouchableOpacity >
     );
   }
 
