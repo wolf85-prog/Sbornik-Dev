@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
+import { Link } from 'expo-router'
 import React from 'react'
 
 const Playlist = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Плейлисты</Text>
+      <Link href="/list/1" style={styles.text}>Плейлисты</Link>
     </View>
   )
 }
