@@ -41,6 +41,41 @@ export default function DrawerLayout() {
 
             }}
         />
+
+        <Drawer.Screen
+            name="accords"
+            options={{
+                headerShown: false,
+                headerTintColor: '#fff', //цвет заголовка
+                headerStyle: {
+                    backgroundColor: '#25292e'
+                  }, //цвет фона заголовка
+                drawerLabel: 'Аккорды',
+                title: 'Аккорды',
+                drawerIcon: ({size, color})=>(
+                    <Image source={require('../../assets/icons/eye.png')} style={{ width: 25, height: 25, }} />
+                )
+
+            }}
+        />
+
+        <Drawer.Screen
+            name="settings"
+            options={{
+                headerShown: false,
+                headerTintColor: '#fff', //цвет заголовка
+                headerStyle: {
+                    backgroundColor: '#25292e'
+                  }, //цвет фона заголовка
+                drawerLabel: 'Настройки',
+                title: 'Настройки',
+                drawerIcon: ({size, color})=>(
+                    <Image source={require('../../assets/icons/eye.png')} style={{ width: 25, height: 25, }} />
+                )
+
+            }}
+        />
+
         <Drawer.Screen
             name="about"
             options={{

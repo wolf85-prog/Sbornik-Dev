@@ -51,6 +51,28 @@ export default function TabLayout() {
             ),
           }}
         />
+        <Tabs.Screen
+          name="favorites"
+          options={{
+            title: 'Избранное',
+            // headerShown: true,
+            // headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="notes"
+          options={{
+            title: 'Заметки',
+            // headerShown: true,
+            // headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
+            ),
+          }}
+        />
       </Tabs>
     );
 }
