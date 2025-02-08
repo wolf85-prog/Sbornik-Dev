@@ -4,6 +4,6 @@ import { Redirect } from 'expo-router';
 
 export default function Page() {
   return (
-    <Redirect href="/(drawer)/about/about" />
+    <Redirect href="/(drawer)/(tabs)/home" />
   )
 }
