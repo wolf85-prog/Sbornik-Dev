@@ -1,7 +1,9 @@
 import { Text, View, StyleSheet } from "react-native";
 //import { Link, Href } from 'expo-router';
 // import ImageViewer from "../../components/ImageViewer";
-import Button from '../../components/Button';
+import Button from '../../../../components/Button';
+import { Stack } from 'expo-router';
+import { DrawerToggleButton } from "@react-navigation/drawer";
 
 //import * as SQLite from 'expo-sqlite';
 import { useState, useEffect } from 'react';
@@ -60,6 +62,7 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
+      <Stack.Screen options={{ headerShown: true, title: "Главная", headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) }} />
       {/* <View style={styles.imageContainer}>
         <ImageViewer imgSource={PlaceholderImage} />
       </View> */}

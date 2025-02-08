@@ -1,10 +1,11 @@
 import { Stack } from "expo-router";
 import { Drawer } from 'expo-router/drawer';
-import CustomDrawerContent from '../components/customDrawerContent';
+import CustomDrawerContent from '../../components/customDrawerContent';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image, View } from 'react-native'
+import { DrawerToggleButton } from "@react-navigation/drawer";
 
-export default function RootLayout() {
+export default function DrawerLayout() {
   return (
     <Drawer
         screenOptions={{
@@ -29,25 +30,13 @@ export default function RootLayout() {
     >
 
         <Drawer.Screen
-            name="home"
+            name="(tabs)"
             options={{
                 drawerLabel: 'Главная',
                 title: 'Главная',
                 drawerIcon: ({size, color})=>(
                     // <Ionicons name='md-home' size={size} color={color} />
-                    <Image source={require('../assets/icons/eye.png')} color={color}  style={{ width: 25, height: 25, }} />
-                )
-
-            }}
-        />
-        <Drawer.Screen
-            name="index"
-            options={{
-                drawerLabel: 'Список песен',
-                title: 'Список песен',
-                drawerIcon: ({size, color})=>(
-                    // <Ionicons name='md-home' size={size} color={color} />
-                    <Image source={require('../assets/icons/eye.png')} color={color}  style={{ width: 25, height: 25, }} />
+                    <Image source={require('../../assets/icons/eye.png')}  style={{ width: 25, height: 25, }} />
                 )
 
             }}
@@ -55,7 +44,7 @@ export default function RootLayout() {
         <Drawer.Screen
             name="about"
             options={{
-                headerShown: true,
+                headerShown: false,
                 headerTintColor: '#fff', //цвет заголовка
                 headerStyle: {
                     backgroundColor: '#25292e'
@@ -63,7 +52,7 @@ export default function RootLayout() {
                 drawerLabel: 'О приложении',
                 title: 'О приложении',
                 drawerIcon: ({size, color})=>(
-                    <Image source={require('../assets/icons/eye.png')} color={color}  style={{ width: 25, height: 25, }} />
+                    <Image source={require('../../assets/icons/eye.png')} style={{ width: 25, height: 25, }} />
                 )
 
             }}

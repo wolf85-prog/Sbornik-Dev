@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react'
+import { DrawerToggleButton } from "@react-navigation/drawer";
 
 const SongsScreen = () => {
   const router = useRouter();
@@ -87,6 +88,7 @@ const SongsScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Stack.Screen options={{ headerShown: true, title: "Песни", headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) }} />
       <FlatList
         style={{flex:1}}
         data={state.data}

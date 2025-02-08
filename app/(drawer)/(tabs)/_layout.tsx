@@ -13,16 +13,17 @@ export default function TabLayout() {
             headerShadowVisible: true,
             headerTintColor: '#fff',
             tabBarStyle: {
-            backgroundColor: '#25292e',
+              backgroundColor: '#25292e',
             },
+            headerShown: false
           }}
       >
         <Tabs.Screen
-          name="index"
+          name="home"
           options={{
             title: 'Главная',
-            headerShown: true,
-            headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
+            // headerShown: true,
+            // headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
             tabBarIcon: ({ color, focused }) => (
               <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
             ),
@@ -32,8 +33,8 @@ export default function TabLayout() {
           name="songs"
           options={{
             title: 'Песни',
-            headerShown: true,
-            headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
+            // headerShown: false,
+            // headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
             tabBarIcon: ({ color, focused }) => (
               <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
             ),
@@ -43,8 +44,8 @@ export default function TabLayout() {
           name="playlist"
           options={{
             title: 'Плейлисты',
-            headerShown: true,
-            headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
+            // headerShown: true,
+            // headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
             tabBarIcon: ({ color, focused }) => (
               <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
             ),
