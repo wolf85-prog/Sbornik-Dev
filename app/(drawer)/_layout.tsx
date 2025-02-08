@@ -43,6 +43,23 @@ export default function DrawerLayout() {
         />
 
         <Drawer.Screen
+            name="categories"
+            options={{
+                headerShown: false,
+                headerTintColor: '#fff', //цвет заголовка
+                headerStyle: {
+                    backgroundColor: '#25292e'
+                  }, //цвет фона заголовка
+                drawerLabel: 'Категории песен',
+                title: 'Категории песен',
+                drawerIcon: ({size, color})=>(
+                    <Image source={require('../../assets/icons/eye.png')} style={{ width: 25, height: 25, }} />
+                )
+
+            }}
+        />
+
+        <Drawer.Screen
             name="accords"
             options={{
                 headerShown: false,
