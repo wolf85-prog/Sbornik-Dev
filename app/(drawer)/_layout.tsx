@@ -32,8 +32,8 @@ export default function DrawerLayout() {
         <Drawer.Screen
             name="(tabs)"
             options={{
-                drawerLabel: 'Главная',
-                title: 'Главная',
+                drawerLabel: 'Список песен',
+                title: 'Список песен',
                 drawerIcon: ({size, color})=>(
                     // <Ionicons name='md-home' size={size} color={color} />
                     <Image source={require('../../assets/icons/eye.png')}  style={{ width: 25, height: 25, }} />
@@ -41,6 +41,19 @@ export default function DrawerLayout() {
 
             }}
         />
+
+        {/* <Drawer.Screen
+            name="(tabs)/songs"
+            options={{
+                drawerLabel: 'Алфавитный список',
+                title: 'Алфавитный список',
+                drawerIcon: ({size, color})=>(
+                    // <Ionicons name='md-home' size={size} color={color} />
+                    <Image source={require('../../assets/icons/eye.png')}  style={{ width: 25, height: 25, }} />
+                )
+
+            }}
+        /> */}
 
         <Drawer.Screen
             name="categories"
