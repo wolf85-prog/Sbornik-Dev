@@ -73,7 +73,7 @@ const SongsScreen = () => {
 
   function Item({ item }) {
     return (
-      <TouchableOpacity style={styles.listItem} onPress={()=> {router.push('/home/song/details')}} >
+      <TouchableOpacity style={styles.listItem} onPress={()=> {router.push('/songs/details')}} >
         <Image source={{uri:item.photo}}  style={{width:60, height:60,borderRadius:30}} />
         <View style={{alignItems:"center",flex:1}}>
           <Text style={{fontWeight:"bold"}}>{item.name}</Text>
