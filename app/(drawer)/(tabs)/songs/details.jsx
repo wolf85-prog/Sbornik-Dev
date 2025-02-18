@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { useMemo } from 'react';
 import { Text, View, StyleSheet, SafeAreaView } from "react-native";
-import PagerView from "react-native-pager-view";
+//import PagerView from "react-native-pager-view";
 
 
 export default function Details() {
@@ -22,18 +22,12 @@ export default function Details() {
   ]
   
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Stack.Screen options={{ headerShown: true, title: "Details Page" }} />
-        <PagerView style={styles.page} initialPage={0}>
-          <View key='1'>
-            <Text>Page 1</Text>
-          </View>
-          <View key='2'>
-            <Text>Page 2</Text>
-          </View>
-        </PagerView>
-
-    </SafeAreaView>
+        <View key='1'>
+          <Text>Page 1</Text>
+        </View>
+    </View>
   );
 }
 
