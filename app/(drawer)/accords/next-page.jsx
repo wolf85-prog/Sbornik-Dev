@@ -6,7 +6,6 @@ import Star from "@/components/Star";
 const PADDING = 16;
 
 export default function NextPage() {
-  const { width } = useWindowDimensions();
 
 
   return (
