@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import { Text, View, StyleSheet } from "react-native";
 import {Canvas} from "@shopify/react-native-skia";
 import Star from "@/components/Star";
+import Setka from "@/components/Setka";
 
 const PADDING = 16;
 
@@ -12,7 +13,7 @@ export default function NextPage() {
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: true, title: "Next Page" }} />
       <Canvas style={styles.skia}>
-        <Star/>
+        <Setka/>
       </Canvas>
     </View>
   );
