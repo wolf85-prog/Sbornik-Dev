@@ -5,31 +5,39 @@ import {Skia, Line, vec, useFonts, Paragraph, TextAlign, Circle} from "@shopify/
 // Example from https://shopify.github.io/react-native-skia/docs/shapes/path/
 const Setka = () => {
 
-    const fontSize = 32;
-
-    // const customFontMgr = useFonts({
-    //     Poppins: [
-    //       require("./../assets/fonts/Poppins-Bold.ttf")
-    //     ]
-    //   });
+    const customFontMgr = useFonts({
+        Poppins: [
+          require("./../assets/fonts/Poppins-Bold.ttf")
+        ],
+        Noto: [require("./../assets/fonts/SpaceMono-Regular.ttf")],
+      });
       
+    // const paragraph = Skia.ParagraphBuilder.Make()
+    //     .addText("Hello Skia")
+    //     .build();
 
 
     const paragraph = useMemo(() => {
         // Are the font loaded already?
+        // Are the font loaded already?
+        if (!customFontMgr) {
+            return null;
+        }
+
         const paragraphStyle = {
           textAlign: TextAlign.Center
         };
-        // const textStyle = {
-        //   color: Skia.Color("black"),
-        //   fontFamilies: ["Poppins"],
-        //   fontSize: 50,
-        // };
-        return Skia.ParagraphBuilder.Make()
+        const textStyle = {
+          color: Skia.Color("black"),
+          fontFamilies: ["Poppins"],
+          fontSize: 50,
+        };
+        return Skia.ParagraphBuilder.Make(paragraphStyle, customFontMgr)
+          .pushStyle(textStyle)
           .addText("Say Hello to ")
           .pop()
           .build();
-    }, []);
+    }, [customFontMgr]);
 
     const lineStart = 50;
     const lineEnd = 150;
@@ -56,7 +64,7 @@ const Setka = () => {
 
     return (
         <>
-            <Paragraph paragraph={paragraph} x={0} y={0} width={300} />
+            {/* <Paragraph paragraph={paragraph} x={0} y={0} width={300} /> */}
 
             {/* Горизонтальные линии */}
             <Line
