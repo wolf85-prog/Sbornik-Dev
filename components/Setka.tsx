@@ -5,39 +5,39 @@ import {Skia, Line, vec, useFonts, Paragraph, TextAlign, Circle} from "@shopify/
 // Example from https://shopify.github.io/react-native-skia/docs/shapes/path/
 const Setka = () => {
 
-    const customFontMgr = useFonts({
-        Poppins: [
-          require("./../assets/fonts/Poppins-Bold.ttf")
-        ],
-        Noto: [require("./../assets/fonts/SpaceMono-Regular.ttf")],
-      });
+    // const customFontMgr = useFonts({
+    //     Poppins: [
+    //       require("./../assets/fonts/Poppins-Bold.ttf")
+    //     ],
+    //     Noto: [require("./../assets/fonts/SpaceMono-Regular.ttf")],
+    //   });
       
     // const paragraph = Skia.ParagraphBuilder.Make()
     //     .addText("Hello Skia")
     //     .build();
 
 
-    const paragraph = useMemo(() => {
-        // Are the font loaded already?
-        // Are the font loaded already?
-        if (!customFontMgr) {
-            return null;
-        }
+    // const paragraph = useMemo(() => {
+    //     // Are the font loaded already?
+    //     // Are the font loaded already?
+    //     // if (!SpaceMono) {
+    //     //     return null;
+    //     // }
 
-        const paragraphStyle = {
-          textAlign: TextAlign.Center
-        };
-        const textStyle = {
-          color: Skia.Color("black"),
-          fontFamilies: ["Poppins"],
-          fontSize: 50,
-        };
-        return Skia.ParagraphBuilder.Make(paragraphStyle, customFontMgr)
-          .pushStyle(textStyle)
-          .addText("Say Hello to ")
-          .pop()
-          .build();
-    }, [customFontMgr]);
+    //     const paragraphStyle = {
+    //       textAlign: TextAlign.Center
+    //     };
+    //     const textStyle = {
+    //       color: Skia.Color("black"),
+    //       //fontFamilies: ["Poppins"],
+    //       fontSize: 50,
+    //     };
+    //     return Skia.ParagraphBuilder.Make(paragraphStyle)
+    //       .pushStyle(textStyle)
+    //       .addText("Say Hello to ")
+    //       .pop()
+    //       .build();
+    // }, []);
 
     const lineStart = 50;
     const lineEnd = 150;
