@@ -15,19 +15,13 @@ export default function CustomDrawerContent(props:any) {
         navigation.dispatch(DrawerActions.closeDrawer())
     }
   return (
-    <View
-        style={{flex: 1}}
-    >
+    <View style={{flex: 1, padding: 0}}>
       <DrawerContentScrollView {...props} scrollEnabled={false}>
-        {/* <View style={{padding: 20}}>
-            <Image style={{height: 35}} resizeMode='contain' source={require('../assets/images/re')} />
-        </View> */}
-        <View style={{padding: 20}}>
-            {/* <Image style={{height: 35}} resizeMode='contain' source={require('../../assets/images/logo')} /> */}
+        <View>
             <Image
-              source={images.logo}
-              className="w-9 h-10"
-              resizeMode="contain"
+              style={{width: 350, height: 205}}
+              source={images.header}
+              resizeMode="cover"
             />
         </View>
         <DrawerItemList {...props} />
