@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react'
 import { DrawerToggleButton } from "@react-navigation/drawer";
+import { Ionicons } from '@expo/vector-icons';
 
 const SongsScreen = () => {
   const router = useRouter();
@@ -11,77 +12,74 @@ const SongsScreen = () => {
         {
             "name": "Miyah Myles",
             "email": "miyah.myles@gmail.com",
-            "position": "Data Entry Clerk",
-            "photo": "https:\/\/images.unsplash.com\/photo-1494790108377-be9c29b29330?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=707b9c33066bf8808c934c8ab394dff6"
+            "position": "1",
         },
         {
             "name": "June Cha",
             "email": "june.cha@gmail.com",
-            "position": "Sales Manager",
-            "photo": "https:\/\/randomuser.me\/api\/portraits\/women\/44.jpg"
+            "position": "2",
         },
         {
             "name": "Iida Niskanen",
             "email": "iida.niskanen@gmail.com",
-            "position": "Sales Manager",
-            "photo": "https:\/\/randomuser.me\/api\/portraits\/women\/68.jpg"
+            "position": "3",
         },
         {
             "name": "Renee Sims",
             "email": "renee.sims@gmail.com",
-            "position": "Medical Assistant",
-            "photo": "https:\/\/randomuser.me\/api\/portraits\/women\/65.jpg"
+            "position": "4",
         },
         {
             "name": "Jonathan Nu\u00f1ez",
             "email": "jonathan.nu\u00f1ez@gmail.com",
-            "position": "Clerical",
-            "photo": "https:\/\/randomuser.me\/api\/portraits\/men\/43.jpg"
+            "position": "5",
         },
         {
             "name": "Sasha Ho",
             "email": "sasha.ho@gmail.com",
-            "position": "Administrative Assistant",
-            "photo": "https:\/\/images.pexels.com\/photos\/415829\/pexels-photo-415829.jpeg?h=350&auto=compress&cs=tinysrgb"
+            "position": "6",
         },
         {
             "name": "Abdullah Hadley",
             "email": "abdullah.hadley@gmail.com",
-            "position": "Marketing",
-            "photo": "https:\/\/images.unsplash.com\/photo-1507003211169-0a1dd7228f2d?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=a72ca28288878f8404a795f39642a46f"
+            "position": "7",
         },
         {
             "name": "Thomas Stock",
             "email": "thomas.stock@gmail.com",
-            "position": "Product Designer",
-            "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
+            "position": "8",
         },
         {
             "name": "Veeti Seppanen",
             "email": "veeti.seppanen@gmail.com",
-            "position": "Product Designer",
-            "photo": "https:\/\/randomuser.me\/api\/portraits\/men\/97.jpg"
+            "position": "9",
         },
         {
             "name": "Bonnie Riley",
             "email": "bonnie.riley@gmail.com",
-            "position": "Marketing",
-            "photo": "https:\/\/randomuser.me\/api\/portraits\/women\/26.jpg"
+            "position": "10",
         }
     ]
   }
 
   function Item({ item }) {
     return (
-      <TouchableOpacity style={styles.listItem} onPress={()=> {router.push('/songs/details')}} >
-        <Image source={{uri:item.photo}}  style={{width:60, height:60,borderRadius:30}} />
-        <View style={{alignItems:"center",flex:1}}>
-          <Text style={{fontWeight:"bold"}}>{item.name}</Text>
-          <Text>{item.position}</Text>
-          <TouchableOpacity style={{height:50,width:50, justifyContent:"center",alignItems:"center"}}>
-            <Text style={{color:"green"}}>Call</Text>
-          </TouchableOpacity>
+      <TouchableOpacity style={styles.card} onPress={()=> {router.push('/songs/details')}} >
+        <View style={styles.flex}>
+          <View style={styles.number}>
+            <Text>{item.position}</Text>
+          </View>   
+          
+          <View style={styles.main_content}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.category}>{item.email}</Text>     
+          </View>
+
+          <View style={styles.right_section}>
+            <Ionicons name="star-outline" size={24} color="#feed33" />
+          </View>
         </View>
+        
       </TouchableOpacity >
     );
   }
@@ -104,7 +102,10 @@ export default SongsScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#25292e',
+        backgroundColor: '#f3f3f3',
+        width: '100%',
+        paddingTop: 20,
+        paddingHorizontal: 10
       },
       text: {
         color: '#fff',
@@ -118,5 +119,41 @@ const styles = StyleSheet.create({
         alignSelf:"center",
         flexDirection:"row",
         borderRadius:5
+      },
+      card: {
+        height: 65,
+        backgroundColor: '#0005',
+        padding: 8,
+        paddingHorizontal: 15,
+        marginTop: 10,
+        borderRadius: 6,
+        borderColor: '#000'
+      },
+      number: {
+        width: 40,
+        height: 40,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      flex: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'row'
+      },
+      main_content: {
+        width: '70%'
+      },
+      name: {
+        color: '#fff',
+        fontSize: 16, 
+        fontFamily: 'SpaceMono'
+      },
+      category: {
+        color: '#f3f3f3',
+        fontFamily: 'SpaceMono'
       }
+
 })
