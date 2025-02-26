@@ -39,7 +39,8 @@
         {
           "fonts": ["./assets/fonts/Poppins-Regular.ttf"]
         }
-      ]
+      ],
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true

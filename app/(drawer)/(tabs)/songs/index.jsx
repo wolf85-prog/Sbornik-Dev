@@ -4,6 +4,15 @@ import React from 'react'
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Ionicons } from '@expo/vector-icons';
 
+import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
+import {
+  IconButton,
+  Provider,
+  Portal,
+  Dialog,
+  Button,
+} from "react-native-paper";
+
 const SongsScreen = () => {
   const router = useRouter();
 
@@ -85,6 +94,11 @@ const SongsScreen = () => {
   }
 
   return (
+    // <Provider>
+    //   <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../../../../assets/db/sbornik.db') }}>
+    //     <Content />
+    //   </SQLiteProvider>
+    // </Provider>
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: true, title: "Песни", headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) }} />
       <FlatList
@@ -98,6 +112,77 @@ const SongsScreen = () => {
 }
 
 export default SongsScreen
+
+export function Content() {
+  const db = useSQLiteContext();
+
+  const [textInputValue, setTextInputValue] = useState("");
+  const [dialog, setDialog] = useState({
+    customer: {},
+    isVisible: false,
+  });
+  const [customers, setCustomers] = useState([]);
+
+  // useEffect(() => {
+
+  //   const fetch = (async()=> {
+
+  //     await db.withTransactionAsync(async () => {
+  //       const allRows = await db.getAllAsync('SELECT * FROM notes');
+  //       const customers = allRows.map((row) => ({
+  //         uid: row.id_song,
+  //         name: row.note,
+  //       }));
+
+  //       console.log(customers)
+
+  //       setCustomers(customers);
+  //     });
+  //   })
+
+  //   fetch()
+  // }, []);
+  
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+        
+          <View style={styles.container}>
+            <Text style={styles.titleText}>Little Lemon Customers</Text>
+            <TextInput
+              placeholder="Enter the customer name"
+              value={textInputValue}
+              onChangeText={(data) => setTextInputValue(data)}
+              underlineColorAndroid="transparent"
+              style={styles.textInputStyle}
+            />
+            <TouchableOpacity
+              disabled={!textInputValue}
+              onPress={() => {
+                const newValue = {
+                  uid: Date.now().toString(),
+                  name: textInputValue,
+                };
+                setCustomers([...customers, newValue]);
+
+                setTextInputValue("");
+              }}
+              style={styles.buttonStyle}>
+              <Text style={styles.buttonTextStyle}> Save Customer </Text>
+            </TouchableOpacity>
+            <View>
+              <Text style={styles.customerName}>Customers: </Text>
+              {customers.map((customer, index) => (
+                <View key={index} style={styles.customer}>
+                  <Text style={styles.customerName}>{customer.name}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        
+      </SafeAreaView>
+  );
+}
 
 const styles = StyleSheet.create({
     container: {
