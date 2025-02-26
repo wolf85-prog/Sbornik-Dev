@@ -123,7 +123,8 @@ export function Content() {
   });
   const [customers, setCustomers] = useState([]);
 
-  // useEffect(() => {
+  // 
+  
 
   //   const fetch = (async()=> {
 
