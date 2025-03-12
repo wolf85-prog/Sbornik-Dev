@@ -9,7 +9,7 @@ export default function CategoriesScreen() {
     <View style={styles.container} >
       <Stack.Screen options={{ headerShown: true, title: "Категории песен", headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) }} />
       <Text style={styles.text}>Категории песен</Text>
-      <Link href="/(drawer)/categories/next-page" style={{ marginTop: 16, fontSize: 18 }}>
+      <Link href="/(drawer)/categories/details/2" style={{ marginTop: 16, fontSize: 18 }}>
         <Text style={{ fontWeight: "bold" }}>Go To Next Page</Text>
       </Link>
     </View>

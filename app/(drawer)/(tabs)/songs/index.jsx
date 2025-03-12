@@ -64,11 +64,9 @@ const SongsScreen = () => {
 
   function Item({ item }) {
     return (
-      <TouchableOpacity style={styles.card} onPress={()=> {router.push('/songs/details')}} >
+      <TouchableOpacity style={styles.card} onPress={()=> {router.push('/songs/song/3')}} >
         <View style={styles.flex}>
-          <View style={styles.number}>
-            <Text>{item.position}</Text>
-          </View>   
+            
           
           <View style={styles.main_content}>
             <Text style={styles.name}>{item.name}</Text>
@@ -76,6 +74,9 @@ const SongsScreen = () => {
           </View>
 
           <View style={styles.right_section}>
+            <View style={styles.number}>
+              <Text>{item.position}</Text>
+            </View> 
             <Ionicons name="star-outline" size={24} color="#feed33" />
           </View>
         </View>
@@ -155,6 +156,13 @@ const styles = StyleSheet.create({
       category: {
         color: '#f3f3f3',
         fontFamily: 'SpaceMono'
+      },
+      right_section: {
+        display: 'flex',
+        justifyContent: 'end',
+        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'row'
       }
 
 })
