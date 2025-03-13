@@ -64,7 +64,7 @@ const SongsScreen = () => {
 
   function Item({ item }) {
     return (
-      <TouchableOpacity style={styles.card} onPress={()=> {router.push('/songs/song/3')}} >
+      <TouchableOpacity style={styles.card} onPress={()=> {router.push(`/songs/song/${item.position}`)}} >
         <View style={styles.flex}>
             
           
