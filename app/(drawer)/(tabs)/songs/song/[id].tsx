@@ -7,7 +7,7 @@ import Card from '../../../../../components/ui/Card';
 
 import songsData from './../../../../../data/songsData.js';
 
-//import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
+import { useSQLiteContext } from "expo-sqlite";
 import {
   Provider,
 } from "react-native-paper";
@@ -22,55 +22,55 @@ export default function DetailsScreen() {
   
   const { id } = useLocalSearchParams(); 
 
-
-
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: true, title: `№ ${id}` }} />
 
       <Provider>
-        {/* <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../../../../../assets/sbornik.db') }}> */}
-          <Content />
-        {/* </SQLiteProvider> */}
+        <Content item={id}/>
       </Provider>
     </View>
   );
 }
 
-export function Content() {
-  //const db = useSQLiteContext();
+interface Todo {
+  name: string;
+  song: string;
+  _id: number;
+  number: number;
+}
+
+export function Content({item}: {item: any}) {
+  const db = useSQLiteContext();
   
   const [songs, setSongs] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [song, setSong] = useState<any>({});
 
   let sliderRef: any
-
-  // useEffect(()=> {
-  //   console.log(id)
-  //   let number: Number
-  //   number = Number(id) - 1
-  //   console.log("number: ", number)
-  //   sliderRef?.goToSlide(number)
-  // }, [id])
 
   useEffect(() => {
     setIsLoading(true);
 
     const fetch = (async()=> {
+      let arr = []
+      await db.withTransactionAsync(async () => {
+        const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${item}`);
+        //console.log("row: ", row, item)
+        const song = {
+          uid: row?._id,
+          name: row?.name,
+          text: row?.song,
+          number: row?.number,
+        };
 
-      // await db.withTransactionAsync(async () => {
-      //   const allRows = await db.getAllAsync('SELECT * FROM songs');
-      //   const songs = allRows.map((row: any) => ({
-      //     uid: row._id,
-      //     name: row.name,
-      //     text: row.song,
-      //     number: row.number,
-      //   }));
+        setSong(song);
+      });
 
-      //   setSongs(songs);
-      // });
+      
+      arr.push(song)
 
-      setSongs(songsData);
+      setSongs(arr);
 
       setIsLoading(false);
     })
@@ -78,22 +78,7 @@ export function Content() {
     fetch()
   }, []);
   
-  // type Item = typeof songs[0];
 
-  // const keyExtractor = (item: Item) => item.name;
-
-  // const renderItem = ({item}: {item: Item}) => {
-  //   return (
-  //     <ScrollView style={styles.scrollStyle}>
-  //       <Card>
-  //         <View style={[styles.slide] }>
-  //           <Text style={styles.title}>{item.name}</Text>
-  //           <Text style={styles.text}>{item.song}</Text>
-  //         </View>
-  //       </Card>        
-  //     </ScrollView>
-  //   );
-  // };
 
   if (isLoading) {
       return (
@@ -103,66 +88,80 @@ export function Content() {
       );
   }
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {/* <AppIntroSlider
-        keyExtractor={keyExtractor}
-        renderItem={renderItem}
-        data={songs}
-        ref={(ref) => (sliderRef = ref)}
-        dotClickEnabled={false}
-        showNextButton={false}
-        showDoneButton={false}
-        dotStyle={{backgroundColor: 'rgba(0, 0, 0, 0)'}}
-      /> */}
-      
-      <PagerView style={styles.pagerView} initialPage={0}>
-        {/* <ScrollView style={styles.scrollStyle}>
-          <Card> */}
-            {/* <View style={[styles.slide] }>
-              <Text style={styles.title}>{songsData[0].name}</Text>
-              <Text style={styles.text}>{songsData[0].song}</Text>
-            </View> */}
-            <View key="1">
-              <Text>First page</Text>
-            </View>
-            <View key="2">
-              <Text>Second page</Text>
-            </View>
-          {/* </Card>        
-        </ScrollView> */}
-      </PagerView>
+  const onPageScroll = (e: any) => {
+    console.log(e.nativeEvent.position)
+    // setSong({
+    //   name: songsData[3].name,
+    //   text: songsData[3].song,
+    // });
 
-      {/* <AnimatedPagerView
+    const fetch = (async()=> {
+      let arr = []
+      await db.withTransactionAsync(async () => {
+        const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${item+1}`);
+        //console.log("row: ", row, item)
+        const song = {
+          uid: row?._id,
+          name: row?.name,
+          text: row?.song,
+          number: row?.number,
+        };
+
+        setSong(song);
+      });
+
+      
+      songs.push(song)
+
+      setSongs(songs);
+    })
+
+    fetch()
+
+  };
+
+  //const processedData = useMemo(({items})=>songsData(items), [items])
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>     
+      {/* <PagerView 
+        style={styles.pagerView} 
+        initialPage={0}
+        onPageScroll={onPageScroll}
+      >
+        <View key={song.number}>
+              <ScrollView style={styles.scrollStyle}>
+                <Card>
+                  <View style={[styles.slide] }>
+                    <Text style={styles.title}>{song.name}</Text>
+                    <Text style={styles.text}>{song.text}</Text>
+                  </View>
+                </Card>        
+              </ScrollView>
+        </View>
+      </PagerView> */}
+
+      <PagerView
         testID="pager-view"
-        //ref={ref}
         style={styles.pagerView}
         initialPage={0}
-        //{...rest}
         pageMargin={10}
+        onPageScroll={onPageScroll}
       >
-        {useMemo(
-          () =>
-            songsData.map((_, index) => (
-              <View
-                testID="pager-view-content"
-                key={index}
-                style={{
-                  flex: 1,
-                  backgroundColor: '#fdc08e',
-                  alignItems: 'center',
-                  padding: 20,
-                }}
-                collapsable={false}
-              >
-                <Text
-                  testID={`pageNumber${index}`}
-                >{`page number ${index}`}</Text>
-              </View>
-            )),
-          [songsData]
-        )}
-      </AnimatedPagerView> */}
+        {songs.map((page: any) => (
+        <View key={page._id} collapsable={false}>
+          <ScrollView style={styles.scrollStyle}>
+                <Card>
+                  <View style={[styles.slide] }>
+                    <Text style={styles.title}>{page.name}</Text>
+                    <Text style={styles.text}>{page.text}</Text>
+                  </View>
+                </Card>        
+          </ScrollView>
+        </View>
+        )
+      )}
+      </PagerView>
     </SafeAreaView>
   );
 }
@@ -200,5 +199,6 @@ const styles = StyleSheet.create({
   },
   pagerView: {
     flex: 1,
+    backgroundColor: '#e9e9e9',
   },
 });
