@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState, useMemo} from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
 //import AppIntroSlider from 'react-native-app-intro-slider';
+//import PagerView from 'react-native-pager-view';
+// import { usePagerView } from 'react-native-pager-view';
 import { Stack } from "expo-router";
 import Card from '../../../../../components/ui/Card';
 
@@ -12,10 +14,7 @@ import {
   Provider,
 } from "react-native-paper";
 import { ScrollView } from 'react-native-gesture-handler';
-
-import PagerView from 'react-native-pager-view';
-//import { usePagerView } from 'react-native-pager-view';
-//const { AnimatedPagerView, ref, ...rest } = usePagerView({ pagesAmount: 10 });
+// const { AnimatedPagerView, ref, ...rest } = usePagerView({ pagesAmount: 10 });
 
 
 export default function DetailsScreen() {
@@ -116,22 +115,16 @@ export function Content() {
         dotStyle={{backgroundColor: 'rgba(0, 0, 0, 0)'}}
       /> */}
       
-      <PagerView style={styles.pagerView} initialPage={0}>
-        {/* <ScrollView style={styles.scrollStyle}>
-          <Card> */}
-            {/* <View style={[styles.slide] }>
+      {/* <PagerView style={styles.pagerView} initialPage={0}>
+        <ScrollView style={styles.scrollStyle}>
+          <Card>
+            <View style={[styles.slide] }>
               <Text style={styles.title}>{songsData[0].name}</Text>
               <Text style={styles.text}>{songsData[0].song}</Text>
-            </View> */}
-            <View key="1">
-              <Text>First page</Text>
             </View>
-            <View key="2">
-              <Text>Second page</Text>
-            </View>
-          {/* </Card>        
-        </ScrollView> */}
-      </PagerView>
+          </Card>        
+        </ScrollView>
+      </PagerView> */}
 
       {/* <AnimatedPagerView
         testID="pager-view"

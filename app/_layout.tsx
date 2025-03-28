@@ -8,6 +8,7 @@ import {useEffect, useState} from 'react';
 import { useColorScheme } from '@/components/useColorScheme';
 import { Platform } from 'react-native';
 import {LoadSkiaWeb} from "@shopify/react-native-skia/lib/module/web";
+import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -63,10 +64,14 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
+      
+      <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../assets/sbornik.db') }}>
+        <Stack>
+          <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        </Stack>
+      </SQLiteProvider>
+      
     </ThemeProvider>
   );
 }

@@ -1,127 +1,166 @@
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator, TextInput } from 'react-native'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react'
+import { useEffect, useState } from "react";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Ionicons } from '@expo/vector-icons';
+import Card from '../../../../components/ui/Card';
+//import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
+import {
+  Provider,
+} from "react-native-paper";
+
+import filter from "lodash.filter"
+
+import songsData from './../../../../data/songsData.js';
 
 const SongsScreen = () => {
-  const router = useRouter();
-
-  let state = {
-    data:[
-        {
-            "name": "Miyah Myles",
-            "email": "miyah.myles@gmail.com",
-            "position": "1",
-        },
-        {
-            "name": "June Cha",
-            "email": "june.cha@gmail.com",
-            "position": "2",
-        },
-        {
-            "name": "Iida Niskanen",
-            "email": "iida.niskanen@gmail.com",
-            "position": "3",
-        },
-        {
-            "name": "Renee Sims",
-            "email": "renee.sims@gmail.com",
-            "position": "4",
-        },
-        {
-            "name": "Jonathan Nu\u00f1ez",
-            "email": "jonathan.nu\u00f1ez@gmail.com",
-            "position": "5",
-        },
-        {
-            "name": "Sasha Ho",
-            "email": "sasha.ho@gmail.com",
-            "position": "6",
-        },
-        {
-            "name": "Abdullah Hadley",
-            "email": "abdullah.hadley@gmail.com",
-            "position": "7",
-        },
-        {
-            "name": "Thomas Stock",
-            "email": "thomas.stock@gmail.com",
-            "position": "8",
-        },
-        {
-            "name": "Veeti Seppanen",
-            "email": "veeti.seppanen@gmail.com",
-            "position": "9",
-        },
-        {
-            "name": "Bonnie Riley",
-            "email": "bonnie.riley@gmail.com",
-            "position": "10",
-        }
-    ]
-  }
-
-  function Item({ item }) {
-    return (
-      <TouchableOpacity style={styles.card} onPress={()=> {router.push(`/songs/song/${item.position}`)}} >
-        <View style={styles.flex}>
-            
-          
-          <View style={styles.main_content}>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.category}>{item.email}</Text>     
-          </View>
-
-          <View style={styles.right_section}>
-            <View style={styles.number}>
-              <Text>{item.position}</Text>
-            </View> 
-            <Ionicons name="star-outline" size={24} color="#feed33" />
-          </View>
-        </View>
-        
-      </TouchableOpacity >
-    );
-  }
 
   return (
 
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: true, title: "Песни", headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) }} />
-      <FlatList
-        style={{flex:1}}
-        data={state.data}
-        renderItem={({ item }) => <Item item={item}/>}
-        keyExtractor={item => item.email}
-      />
+      <Provider>
+        {/* <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../../../../assets/sbornik.db') }}> */}
+          <Content />
+        {/* </SQLiteProvider> */}
+      </Provider>
     </View>
   )
 }
 
 export default SongsScreen
 
+export function Content() {
+  //const db = useSQLiteContext();
+
+  const router = useRouter();
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('')
+  const [data, setData] = useState([])
+  const [songs, setSongs] = useState([])
+  const [error, setError] = useState(null)
+  const [fullData, setFullData] = useState([])
+  const [textInputValue, setTextInputValue] = useState("");
+
+  const handleSearch = (query) => {
+    setSearchQuery(query)
+    const formattedQuery = query.toLowerCase()
+    const filteredData = filter(fullData, (user)=> {
+      return contains(user, formattedQuery)
+    })
+    setData(filteredData)
+  }
+  
+  const contains = ({name, email}, query) => {
+    if (name.includes(query) || email.includes(query)) {
+      return true
+    }
+  
+    return false
+  }
+
+  useEffect(() => {
+    setIsLoading(true);
+    const fetch = (async()=> {
+
+      // await db.withTransactionAsync(async () => {
+      //   const allRows = await db.getAllAsync('SELECT * FROM songs');
+      //   const songs = allRows.map((row) => ({
+      //     uid: row._id,
+      //     name: row.name,
+      //     number: row.number,
+      //   }));
+
+      //   const sortedSongs = [...songs].sort((a, b) => {       
+      //     var songA = a.name, songB = b.name
+      //     return (songA < songB) ? -1 : (songA > songB) ? 1 : 0;  //сортировка по возрастанию 
+      //   })
+    
+      //   setSongs(sortedSongs);
+
+      //   setIsLoading(false);
+      // });
+
+      setData(songsData)
+      setFullData(songsData)
+      setIsLoading(false);
+      
+    })
+
+    fetch()
+  }, []);
+  
+  function Item({ item }) {
+    return (
+      <Card>
+        <TouchableOpacity onPress={()=> {router.push(`/songs/song/${item.number}`)}} >
+          <View style={styles.flex}>
+            
+            <View style={styles.main_content}>
+              <Text style={styles.name}>{item.name}</Text>
+              {/* <Text style={styles.category}>{item.email}</Text>      */}
+            </View>
+
+            <View style={styles.right_section}>
+              <View style={styles.number}>
+                <Text>{item.number}</Text>
+              </View>  
+              <Ionicons name="star-outline" size={24} color="#feed33" />
+            </View>
+          </View>
+          
+        </TouchableOpacity >
+      </Card>
+      
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <View style={{flex:1, justifyContent:'center',alignItems:'center'}}>
+        <ActivityIndicator size={"large"} color="#5500dc"/>
+      </View>
+    );
+  }
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <TextInput 
+        placeholder="Поиск..." 
+        clearButtonMode='always' 
+        style={styles.searchBox}
+        autoCapitalize="none"
+        value={searchQuery}
+        onChangeText={(query)=> handleSearch(query)}
+      />
+
+      <FlatList
+        style={styles.listSongs}
+        data={data}
+        renderItem={({ item }) => <Item item={item}/>}
+        keyExtractor={item => item.number}
+        // ItemSeparatorComponent={() => <View style={{height: 15}} />}
+        contentContainerStyle={{ gap: 15 }}
+        // columnWrapperStyle={{ gap: GAP_BETWEEN_COLUMNS }}
+      />       
+    </SafeAreaView>
+  );
+}
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f3f3f3',
         width: '100%',
-        paddingTop: 20,
-        paddingHorizontal: 10
       },
-      text: {
-        color: '#fff',
+
+      listSongs:{
+        padding: 15,
+        flex: 1,
       },
-      listItem:{
-        margin:10,
-        padding:10,
-        backgroundColor:"#FFF",
-        width:"80%",
-        flex:1,
-        alignSelf:"center",
-        flexDirection:"row",
-        borderRadius:5
-      },
+
       card: {
         height: 65,
         backgroundColor: '#0005',
@@ -138,31 +177,49 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
       },
+
       flex: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        height: 55,
       },
+
       main_content: {
         width: '70%'
       },
+
       name: {
-        color: '#fff',
+        color: '#000',
         fontSize: 16, 
-        fontFamily: 'SpaceMono'
+        fontFamily: 'SpaceMono',
       },
+
       category: {
-        color: '#f3f3f3',
+        color: '#e5e5e5',
         fontFamily: 'SpaceMono'
       },
+
       right_section: {
         display: 'flex',
-        justifyContent: 'end',
+        justifyContent: 'flex-end',
         alignItems: 'center',
         flex: 1,
-        flexDirection: 'row'
-      }
+        flexDirection: 'row',
+        gap: 10,
+      },
 
+      searchBox: {
+        height: 46,
+        marginLeft: 15,
+        marginRight: 15,
+        marginTop: 15,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 8,
+      }
 })
