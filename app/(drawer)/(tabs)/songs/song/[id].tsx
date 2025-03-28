@@ -3,6 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { View, Text, StyleSheet } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import { Stack } from "expo-router";
+import PagerView from 'react-native-pager-view';
 
 const data = [
   {
@@ -63,13 +64,26 @@ export default function DetailsScreen() {
     <View style={styles.container}>
 
       <Stack.Screen options={{ headerShown: true, title: "Details" }} />
-      <AppIntroSlider
+      {/* <AppIntroSlider
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         data={data}
         ref={(ref) => (sliderRef = ref)}
-      />
-      </View>
+      /> */}
+
+      <PagerView style={styles.container} initialPage={0}>
+        <View style={styles.page} key="1">
+          <Text>First page</Text>
+          <Text>Swipe ➡️</Text>
+        </View>
+        <View style={styles.page} key="2">
+          <Text>Second page</Text>
+        </View>
+        <View style={styles.page} key="3">
+          <Text>Third page</Text>
+        </View>
+      </PagerView>
+    </View>
   );
 }
 
