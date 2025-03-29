@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
-    height: 55,
+    height: 58,
   },
 
   main_content: {

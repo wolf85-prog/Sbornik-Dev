@@ -6,6 +6,7 @@ import { Stack } from "expo-router";
 import Card from '../../../../../components/ui/Card';
 
 import songsData from './../../../../../data/songsData.js';
+import { PAGES, createPage } from './../../../../../constants/utils';
 
 import { useSQLiteContext } from "expo-sqlite";
 import {
@@ -19,43 +20,53 @@ import PagerView from 'react-native-pager-view';
 
 
 export default function DetailsScreen() {
-  
-  const { id } = useLocalSearchParams(); 
 
-  return (
-    <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: `№ ${id}` }} />
-
-      <Provider>
-        <Content item={id}/>
-      </Provider>
-    </View>
-  );
-}
-
-interface Todo {
-  name: string;
-  song: string;
-  _id: number;
-  number: number;
-}
-
-export function Content({item}: {item: any}) {
   const db = useSQLiteContext();
   
   const [songs, setSongs] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [song, setSong] = useState<any>({});
 
-  let sliderRef: any
+  //const [stateP, setStateP] = useState<State>({});
+
+  let sliderRef = React.createRef<PagerView>();
+
+  const [title, setTitle] = useState<any>('');
+  
+  const { id } = useLocalSearchParams(); 
+
+  useEffect(() => {
+    setTitle(id)
+  }, [id])
 
   useEffect(() => {
     setIsLoading(true);
 
     const fetch = (async()=> {
+      const pages = [];
+      const sortedSongs = [...songsData].sort((a, b) => {       
+        var songA = a.name, songB = b.name
+        return (songA < songB) ? -1 : (songA > songB) ? 1 : 0;  //сортировка по возрастанию 
+      })
+
+      // for (let i = 0; i < PAGES; i++) {
+      //   const obj = {
+      //     name: sortedSongs[i].name,
+      //     text: sortedSongs[i].song,
+      //     title: sortedSongs[i].number,
+      //     number: sortedSongs[i].number,
+      //   }
+      //   pages.push(obj)
+      //   console.log(sortedSongs[i].number)
+      // }
+
+      
+
+      //setSongs(pages)
+
       let arr = []
       await db.withTransactionAsync(async () => {
-        const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${item}`);
+        const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${id}`);
         //console.log("row: ", row, item)
         const song = {
           uid: row?._id,
@@ -65,14 +76,17 @@ export function Content({item}: {item: any}) {
         };
 
         setSong(song);
+
+        arr.push(song)
+        //songs[Number(id)] = song
+
+        setSongs(arr);
+
+        setIsLoading(false);
       });
 
-      
-      arr.push(song)
-
-      setSongs(arr);
-
       setIsLoading(false);
+      
     })
 
     fetch()
@@ -88,17 +102,44 @@ export function Content({item}: {item: any}) {
       );
   }
 
-  const onPageScroll = (e: any) => {
-    console.log(e.nativeEvent.position)
-    // setSong({
-    //   name: songsData[3].name,
-    //   text: songsData[3].song,
-    // });
+
+  // const onPageScroll = (e: any) => {
+  //   //console.log(e.nativeEvent.position, item)
+
+  //   const fetch = (async()=> {
+  //     let arr = []
+  //     await db.withTransactionAsync(async () => {
+  //       const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=1`);
+  //       //console.log("row: ", row, item)
+  //       const song = {
+  //         uid: row?._id,
+  //         name: row?.name,
+  //         text: row?.song,
+  //         number: row?.number,
+  //       };
+
+  //       setSong(song);
+  //     });
+
+      
+  //     songs.push(song)
+
+  //     setSongs(songs);
+  //   })
+
+  //   //fetch()
+
+  // };
+
+  const onPageSelected = (e: any) => {
+    //console.log(e.nativeEvent.position, id)
+    let ind = Number(id) + Number(e.nativeEvent.position)
+    console.log(ind)
 
     const fetch = (async()=> {
       let arr = []
       await db.withTransactionAsync(async () => {
-        const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${item+1}`);
+        const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${ind}`);
         //console.log("row: ", row, item)
         const song = {
           uid: row?._id,
@@ -113,58 +154,56 @@ export function Content({item}: {item: any}) {
       
       songs.push(song)
 
+      setTitle(ind)
+      //songs[ind-1] = song
       setSongs(songs);
     })
 
     fetch()
-
   };
 
-  //const processedData = useMemo(({items})=>songsData(items), [items])
+  interface Todo {
+    name: string;
+    song: string;
+    _id: number;
+    number: number;
+  }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>     
-      {/* <PagerView 
-        style={styles.pagerView} 
-        initialPage={0}
-        onPageScroll={onPageScroll}
-      >
-        <View key={song.number}>
-              <ScrollView style={styles.scrollStyle}>
-                <Card>
-                  <View style={[styles.slide] }>
-                    <Text style={styles.title}>{song.name}</Text>
-                    <Text style={styles.text}>{song.text}</Text>
-                  </View>
-                </Card>        
-              </ScrollView>
-        </View>
-      </PagerView> */}
+    <View style={styles.container}>
+      <Stack.Screen options={{ headerShown: true, title: `№ ${title}` }} />
 
-      <PagerView
-        testID="pager-view"
-        style={styles.pagerView}
-        initialPage={0}
-        pageMargin={10}
-        onPageScroll={onPageScroll}
-      >
-        {songs.map((page: any) => (
-        <View key={page._id} collapsable={false}>
-          <ScrollView style={styles.scrollStyle}>
-                <Card>
-                  <View style={[styles.slide] }>
-                    <Text style={styles.title}>{page.name}</Text>
-                    <Text style={styles.text}>{page.text}</Text>
-                  </View>
-                </Card>        
-          </ScrollView>
-        </View>
-        )
-      )}
-      </PagerView>
-    </SafeAreaView>
+      <Provider>
+        <SafeAreaView style={{ flex: 1 }}>    
+          <PagerView
+            testID="pager-view"
+            style={styles.pagerView}
+            initialPage={0}
+            pageMargin={10}
+            //onPageScroll={onPageScroll}
+            onPageSelected={onPageSelected}
+          >
+            {songs.map((page: any) => (
+            <View key={page._id} collapsable={false}>
+              <ScrollView style={styles.scrollStyle}>
+                    <Card>
+                      <View style={[styles.slide] }>
+                        <Text style={styles.title}>{page.name}</Text>
+                        <Text style={styles.text}>{page.text}</Text>
+                      </View>
+                    </Card>        
+              </ScrollView>
+            </View>
+            )
+          )}
+          </PagerView>
+        </SafeAreaView>
+      </Provider>
+    </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {

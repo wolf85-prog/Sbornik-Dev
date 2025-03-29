@@ -83,8 +83,15 @@ export function Content() {
       //   setIsLoading(false);
       // });
 
-      setData(songsData)
-      setFullData(songsData)
+      const sortedSongs = [...songsData].sort((a, b) => {       
+          var songA = a.name, songB = b.name
+          return (songA < songB) ? -1 : (songA > songB) ? 1 : 0;  //сортировка по возрастанию 
+      })
+    
+      //setSongs(sortedSongs);
+
+      setData(sortedSongs)
+      setFullData(sortedSongs)
       setIsLoading(false);
       
     })
@@ -100,7 +107,7 @@ export function Content() {
             
             <View style={styles.main_content}>
               <Text style={styles.name}>{item.name}</Text>
-              {/* <Text style={styles.category}>{item.email}</Text>      */}
+              <Text style={styles.category}>Без категории</Text>     
             </View>
 
             <View style={styles.right_section}>
@@ -184,11 +191,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         flexDirection: 'row',
-        height: 55,
+        height: 58,
       },
 
       main_content: {
-        width: '70%'
+        width: '70%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
       },
 
       name: {
