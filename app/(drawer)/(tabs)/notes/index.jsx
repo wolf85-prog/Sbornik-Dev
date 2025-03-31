@@ -3,7 +3,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react'
 import { useEffect, useState } from "react";
 import { DrawerToggleButton } from "@react-navigation/drawer";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import Card from '../../../../components/ui/Card';
 //import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import {
@@ -14,14 +14,28 @@ import filter from "lodash.filter"
 
 const NotesScreen = () => {
 
+  const headerRight = () => {
+        return (
+          <TouchableOpacity
+            // onPress={()=>router.push("/modal")}
+            style={{marginRight: 10}}
+          >
+            <FontAwesome name="plus-circle" size={28} color="blue" />
+          </TouchableOpacity>
+        );
+  };
+
   return (
 
     <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: "Заметки", headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) }} />
+      <Stack.Screen options={{ 
+        headerShown: true, 
+        title: "Заметки", 
+        headerRight: headerRight,
+        headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) 
+      }} />
       <Provider>
-        {/* <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../../../../assets/sbornik.db') }}> */}
           <Content />
-        {/* </SQLiteProvider> */}
       </Provider>
     </View>
   )

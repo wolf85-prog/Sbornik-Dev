@@ -29,7 +29,8 @@ export default function DetailsScreen() {
 
   //const [stateP, setStateP] = useState<State>({});
 
-  let sliderRef = React.createRef<PagerView>();
+  //let sliderRef = React.createRef<PagerView>();
+  const sliderRef = useRef<PagerView>(null);
 
   const [title, setTitle] = useState<any>('');
   
@@ -38,6 +39,7 @@ export default function DetailsScreen() {
   useEffect(() => {
     setTitle(id)
   }, [id])
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -49,20 +51,7 @@ export default function DetailsScreen() {
         return (songA < songB) ? -1 : (songA > songB) ? 1 : 0;  //сортировка по возрастанию 
       })
 
-      // for (let i = 0; i < PAGES; i++) {
-      //   const obj = {
-      //     name: sortedSongs[i].name,
-      //     text: sortedSongs[i].song,
-      //     title: sortedSongs[i].number,
-      //     number: sortedSongs[i].number,
-      //   }
-      //   pages.push(obj)
-      //   console.log(sortedSongs[i].number)
-      // }
 
-      
-
-      //setSongs(pages)
 
       let arr = []
       await db.withTransactionAsync(async () => {
@@ -76,11 +65,10 @@ export default function DetailsScreen() {
         };
 
         setSong(song);
-
         arr.push(song)
-        //songs[Number(id)] = song
 
         setSongs(arr);
+        sliderRef.current?.setPage(Number(id))
 
         setIsLoading(false);
       });
@@ -104,37 +92,35 @@ export default function DetailsScreen() {
 
 
   // const onPageScroll = (e: any) => {
-  //   //console.log(e.nativeEvent.position, item)
+  //   console.log("onPageScroll: ", e.nativeEvent.position)
 
-  //   const fetch = (async()=> {
-  //     let arr = []
-  //     await db.withTransactionAsync(async () => {
-  //       const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=1`);
-  //       //console.log("row: ", row, item)
-  //       const song = {
-  //         uid: row?._id,
-  //         name: row?.name,
-  //         text: row?.song,
-  //         number: row?.number,
-  //       };
+    // const fetch = (async()=> {
+    //   let arr = []
+    //   await db.withTransactionAsync(async () => {
+    //     const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=10`);
+    //     //console.log("row: ", row, item)
+    //     const song = {
+    //       uid: row?._id,
+    //       name: row?.name,
+    //       text: row?.song,
+    //       number: row?.number,
+    //     };
 
-  //       setSong(song);
-  //     });
+    //     setSong(song);
+    //   });
 
-      
-  //     songs.push(song)
+    //   songs.push(song)
+    //   setSongs(songs);
+    // })
 
-  //     setSongs(songs);
-  //   })
+    // fetch()
 
-  //   //fetch()
-
-  // };
+  //};
 
   const onPageSelected = (e: any) => {
     //console.log(e.nativeEvent.position, id)
     let ind = Number(id) + Number(e.nativeEvent.position)
-    console.log(ind)
+    console.log("onPageSelected: ", ind)
 
     const fetch = (async()=> {
       let arr = []
@@ -149,14 +135,15 @@ export default function DetailsScreen() {
         };
 
         setSong(song);
+        
       });
 
-      
       songs.push(song)
-
       setTitle(ind)
-      //songs[ind-1] = song
+
       setSongs(songs);
+      sliderRef.current?.setPage(ind)
+
     })
 
     fetch()
@@ -176,6 +163,7 @@ export default function DetailsScreen() {
       <Provider>
         <SafeAreaView style={{ flex: 1 }}>    
           <PagerView
+            ref={sliderRef}
             testID="pager-view"
             style={styles.pagerView}
             initialPage={0}

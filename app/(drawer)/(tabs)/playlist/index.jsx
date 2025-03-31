@@ -3,21 +3,35 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react'
 import { useEffect, useState } from "react";
 import { DrawerToggleButton } from "@react-navigation/drawer";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import Card from '../../../../components/ui/Card';
 import { useSQLiteContext } from "expo-sqlite";
-import {
-  Provider,
-} from "react-native-paper";
+import {Provider} from "react-native-paper";
 
 import filter from "lodash.filter"
 
 const PlaylistScreen = () => {
 
+  const headerRight = () => {
+      return (
+        <TouchableOpacity
+          // onPress={()=>router.push("/modal")}
+          style={{marginRight: 10}}
+        >
+          <FontAwesome name="plus-circle" size={28} color="blue" />
+        </TouchableOpacity>
+      );
+    };
+
   return (
 
     <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: "Плейлисты", headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) }} />
+      <Stack.Screen options={{ 
+        headerShown: true, 
+        title: "Плейлисты", 
+        headerRight: headerRight,
+        headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) 
+      }} />
       <Provider>
           <Content />
       </Provider>
@@ -87,7 +101,7 @@ export function Content() {
   function Item({ item }) {
     return (
       <Card>
-        <TouchableOpacity onPress={()=> {router.push(`/songs/song/${item.number}`)}} >
+        <TouchableOpacity onPress={()=> {router.push(`/`)}} >
           <View style={styles.flex}>
             
             <View style={styles.main_content}>
@@ -99,7 +113,7 @@ export function Content() {
               <View style={styles.number}>
                 <Text>{item.number}</Text>
               </View>  
-              <Ionicons name="star-outline" size={24} color="#feed33" />
+              {/* <Ionicons name="dots-three-vertical" size={24} color="#feed33" /> */}
             </View>
           </View>
           

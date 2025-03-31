@@ -46,16 +46,14 @@ export default function Index() {
       <Stack.Screen options={{ 
         headerShown: true, 
         title: "Главная", 
-        headerRight: headerRight,
+        //headerRight: headerRight,
         headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />),
         headerStyle: {backgroundColor: currentTheme === 'dark' ? Colors.dark : Colors.white}
         }} 
       />
       
       <Provider>
-        {/* <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../../../../assets/sbornik.db') }}> */}
           <Content />
-        {/* </SQLiteProvider> */}
       </Provider>
       
     </View>

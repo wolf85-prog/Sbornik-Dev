@@ -1,5 +1,6 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+//import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import ThemeProvider from './../context/ThemeContext'
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -63,7 +64,7 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider>
       
       <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../assets/sbornik.db') }}>
         <Stack>
