@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -21,11 +21,21 @@ import {
 //import asyncAlert from "./asyncAlert";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 
+import { ThemeContext } from "./../../../context/ThemeContext.tsx"
+import { Colors } from "react-native/Libraries/NewAppScreen";
+
 export default function AboutScreen() {
+  const {currentTheme} = useContext(ThemeContext)
+
   return (
 
     <View style={styles.container} >
-      <Stack.Screen options={{ headerShown: true, title: "О приложении", headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) }} />
+      <Stack.Screen options={{ 
+          headerShown: true, 
+          title: "О приложении", 
+          headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />), 
+          headerStyle: {backgroundColor: currentTheme === 'dark' ? Colors.dark : Colors.white}
+        }} />
         <Provider>
           {/* <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../../../assets/sbornik.db') }}> */}
             <Content />

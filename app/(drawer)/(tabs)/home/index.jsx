@@ -5,7 +5,7 @@ import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 
 //import * as SQLite from 'expo-sqlite';
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState, useEffect } from 'react';
 
 //import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
@@ -17,6 +17,9 @@ import filter from "lodash.filter"
 
 const PlaceholderImage = require('@/assets/images/background-image.png');
 import songsData from './../../../../data/songsData.js';
+//import { ThemeContext } from "@react-navigation/native";
+import { ThemeContext } from "./../../../../context/ThemeContext.tsx"
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const loadDatabase = async()=> {
   const dbName = 'sbornik.db'
@@ -24,6 +27,8 @@ const loadDatabase = async()=> {
 }
 
 export default function Index() {
+
+  const {currentTheme} = useContext(ThemeContext)
 
   const headerRight = () => {
     return (
@@ -42,8 +47,8 @@ export default function Index() {
         headerShown: true, 
         title: "Главная", 
         headerRight: headerRight,
-        headerLeft: (() => <DrawerToggleButton 
-        tintColor={'#000'} />) 
+        headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />),
+        headerStyle: {backgroundColor: currentTheme === 'dark' ? Colors.dark : Colors.white}
         }} 
       />
       

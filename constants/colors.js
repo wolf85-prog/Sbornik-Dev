@@ -1,8 +1,10 @@
-export default {
+export const Colors = {
+  light: '#FBFBFB',
+  dark: '#0c263b',
   gradientForm: '#A376F1',
   primary: '#7d5fff',
-  white: '#FFFFFF',
-  dark: '#444',
+  white: '#fefeff',
+  //dark: '#444',
   bgColor: '#82ccdd',
   warning: '#f0d500',
   danger: '#FF0D0E',
