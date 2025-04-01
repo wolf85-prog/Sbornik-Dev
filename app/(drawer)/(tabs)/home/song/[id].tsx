@@ -1,13 +1,13 @@
 import React, {useEffect, useRef, useState, useMemo} from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Image, Dimensions } from 'react-native';
 //import AppIntroSlider from 'react-native-app-intro-slider';
 import { Stack } from "expo-router";
 import Card from '../../../../../components/ui/Card';
 
 import songsData from './../../../../../data/songsData.js';
 import { PAGES, createPage } from './../../../../../constants/utils';
-
+import { images } from "../../../../../constants";
 import { useSQLiteContext } from "expo-sqlite";
 import {
   Provider,
@@ -15,9 +15,12 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 
 import PagerView from 'react-native-pager-view';
+import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated';
 //import { usePagerView } from 'react-native-pager-view';
 //const { AnimatedPagerView, ref, ...rest } = usePagerView({ pagesAmount: 10 });
 
+const { width } = Dimensions.get('window');
+const IMG_HEIGHT = 300;
 
 export default function DetailsScreen() {
 
@@ -27,13 +30,38 @@ export default function DetailsScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [song, setSong] = useState<any>({});
 
-  //const [stateP, setStateP] = useState<State>({});
-
-  //let sliderRef = React.createRef<PagerView>();
   const sliderRef = useRef<PagerView>(null);
+  const scrollRef = useAnimatedRef<Animated.ScrollView>()
+  const scrollOfset = useScrollViewOffset(scrollRef)
+
+  const imageAnimatedStyle = useAnimatedStyle(()=> {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            scrollOfset.value,
+            [-IMG_HEIGHT, 0, IMG_HEIGHT],
+            [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
+          )
+        },
+        {
+          scale: interpolate(
+            scrollOfset.value,
+            [-IMG_HEIGHT, 0, IMG_HEIGHT],
+            [2, 1, 1]
+          ),
+        }
+      ]
+    }
+  })
+
+  const headerAnimatedStyle = useAnimatedStyle(()=> {
+    return {
+      opacity: interpolate(scrollOfset.value, [0, IMG_HEIGHT / 1.5], [0, 1]),
+    }
+  })
 
   const [title, setTitle] = useState<any>('');
-  
   const { id } = useLocalSearchParams(); 
 
   useEffect(() => {
@@ -50,8 +78,6 @@ export default function DetailsScreen() {
         var songA = a.name, songB = b.name
         return (songA < songB) ? -1 : (songA > songB) ? 1 : 0;  //сортировка по возрастанию 
       })
-
-
 
       let arr = []
       await db.withTransactionAsync(async () => {
@@ -96,21 +122,7 @@ export default function DetailsScreen() {
 
     // const fetch = (async()=> {
     //   let arr = []
-    //   await db.withTransactionAsync(async () => {
-    //     const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=10`);
-    //     //console.log("row: ", row, item)
-    //     const song = {
-    //       uid: row?._id,
-    //       name: row?.name,
-    //       text: row?.song,
-    //       number: row?.number,
-    //     };
 
-    //     setSong(song);
-    //   });
-
-    //   songs.push(song)
-    //   setSongs(songs);
     // })
 
     // fetch()
@@ -138,10 +150,10 @@ export default function DetailsScreen() {
         
       });
 
-      songs.push(song)
+      //songs.push(song)
       setTitle(ind)
 
-      setSongs(songs);
+      //setSongs(songs);
       sliderRef.current?.setPage(ind)
 
     })
@@ -158,33 +170,50 @@ export default function DetailsScreen() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: `№ ${title}` }} />
+      <Stack.Screen options={{ 
+        headerTransparent: true,
+        headerBackground: ()=> <Animated.View style={[styles.header, headerAnimatedStyle]} />,
+        headerShown: true, 
+        title: `№ ${title}` 
+        }} 
+      />
 
       <Provider>
-        <SafeAreaView style={{ flex: 1 }}>    
-          <PagerView
-            ref={sliderRef}
-            testID="pager-view"
-            style={styles.pagerView}
-            initialPage={0}
-            pageMargin={10}
-            //onPageScroll={onPageScroll}
-            onPageSelected={onPageSelected}
-          >
-            {songs.map((page: any) => (
-            <View key={page._id} collapsable={false}>
-              <ScrollView style={styles.scrollStyle}>
-                    <Card>
-                      <View style={[styles.slide] }>
-                        <Text style={styles.title}>{page.name}</Text>
-                        <Text style={styles.text}>{page.text}</Text>
-                      </View>
-                    </Card>        
-              </ScrollView>
+        <SafeAreaView style={styles.container}> 
+          <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
+            <Image 
+              style={[styles.image, imageAnimatedStyle]}
+              source={images.headerSong}
+              resizeMode="cover"
+            />
+
+            <View style={{height: 2000, backgroundColor: '#fff'}}>
+              <PagerView
+                ref={sliderRef}
+                testID="pager-view"
+                style={styles.pagerView}
+                initialPage={0}
+                pageMargin={10}
+                //onPageScroll={onPageScroll}
+                onPageSelected={onPageSelected}
+              >
+                {songs.map((page: any) => (
+                  <View key={page._id} collapsable={false}>
+                    <ScrollView style={styles.scrollStyle}>
+                          <Card>
+                            <View style={[styles.slide] }>
+                              <Text style={styles.title}>{page.name}</Text>
+                              <Text style={styles.text}>{page.text}</Text>
+                            </View>
+                          </Card>        
+                    </ScrollView>
+                  </View>
+                  )
+                )}
+              </PagerView>
             </View>
-            )
-          )}
-          </PagerView>
+            
+          </Animated.ScrollView>      
         </SafeAreaView>
       </Provider>
     </View>
@@ -201,6 +230,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  header: {
+    backgroundColor: '#fff',
+    height: 100,
+  },
   scrollStyle: {
     padding: 5,
   },
@@ -211,9 +244,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   image: {
-    width: 320,
-    height: 320,
-    marginVertical: 32,
+    width: width, 
+    height: IMG_HEIGHT,
+    //marginVertical: 32,
   },
   text: {
     color: 'rgba(0, 0, 0, 0.8)',
