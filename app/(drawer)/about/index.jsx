@@ -6,11 +6,12 @@ import {
   TextInput,
   Text,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { Link } from "expo-router";
 import { Stack } from 'expo-router';
 import React from 'react'
-//import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
+import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import {
   IconButton,
   Provider,
@@ -20,13 +21,13 @@ import {
 } from "react-native-paper";
 //import asyncAlert from "./asyncAlert";
 import { DrawerToggleButton } from "@react-navigation/drawer";
-
+import { images } from "../../../constants";
 import { ThemeContext } from "./../../../context/ThemeContext.tsx"
 import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default function AboutScreen() {
   const {currentTheme} = useContext(ThemeContext)
-
+  
   return (
 
     <View style={styles.container} >
@@ -37,9 +38,9 @@ export default function AboutScreen() {
           headerStyle: {backgroundColor: currentTheme === 'dark' ? Colors.dark : Colors.white}
         }} />
         <Provider>
-          {/* <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../../../assets/sbornik.db') }}> */}
+          <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../../../assets/sbornik.db') }}>
             <Content />
-          {/* </SQLiteProvider> */}
+          </SQLiteProvider>
         </Provider>
     </View>
       
@@ -47,22 +48,19 @@ export default function AboutScreen() {
 }
 
 export function Content() {
-  //const db = useSQLiteContext();
-
+  const db = useSQLiteContext();
+  const [countSongs, setCountSongs] = useState(0)
 
   useEffect(() => {
 
     const fetch = (async()=> {
 
-      // await db.withTransactionAsync(async () => {
-      //   const allRows = await db.getAllAsync('SELECT * FROM notes');
-      //   const customers = allRows.map((row) => ({
-      //     uid: row.id_song,
-      //     name: row.note,
-      //   }));
+      await db.withTransactionAsync(async () => {
+        const result = await db.getFirstAsync('SELECT COUNT(*) FROM songs');
+        console.log('Count:', result.rows[0]['COUNT(*)']);
 
-      //   setCustomers(customers);
-      // });
+        setCountSongs(result.rows[0]['COUNT(*)']);
+      });
     })
 
     fetch()
@@ -74,10 +72,30 @@ export function Content() {
         
           <View style={styles.container}>
             <Text style={styles.titleText}>Майкопский молодежный сборник</Text>
-
+            <Image
+              style={styles.image}
+              source={images.logo}
+              contentFit="cover"
+              transition={1000}
+            />
             <View>
               <Text style={styles.customerName}>Версия приложения: 2.0</Text>
-              
+              <Text style={styles.customerName}>Доступно песен: {countSongs}</Text>
+              <Text style={styles.customerName}>Аккордов в БД: {countSongs}</Text>
+            </View>
+
+            {/* <View
+              style={{
+                borderBottomColor: '#000',
+                borderBottomWidth: 1,
+              }}
+            /> */}
+
+            <View style={{flex: 1}} />
+
+            <View style={styles.container}>
+              <Text>Майкоп</Text>
+              <Text>2025</Text>
             </View>
           </View>
         
@@ -90,6 +108,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "white",
+    alignItems: "center",
   },
   titleText: {
     fontSize: 22,
@@ -131,4 +150,9 @@ const styles = StyleSheet.create({
   icons: {
     flexDirection: "row",
   },
+  image: {
+    width: 100,
+    height: 100,
+    marginBottom: 20
+  }
 });
