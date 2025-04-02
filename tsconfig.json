@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/(drawer)/about/index.jsx", "app/(drawer)/accords/index.jsx"  ]
+, "app/(drawer)/about/index.jsx", "app/(drawer)/accords/index.jsx", "app/(drawer)/settings/index.jsx"  ]
 }
