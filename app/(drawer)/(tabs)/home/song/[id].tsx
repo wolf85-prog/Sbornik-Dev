@@ -75,15 +75,10 @@ export default function DetailsScreen() {
 
     const fetch = (async()=> {
       const pages = new Array(555);;
-      // const sortedSongs = [...songsData].sort((a, b) => {       
-      //   var songA = a.name, songB = b.name
-      //   return (songA < songB) ? -1 : (songA > songB) ? 1 : 0;  //сортировка по возрастанию 
-      // })
 
-      //let arr = []
       await db.withTransactionAsync(async () => {
         const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${id}`);
-        //console.log("row: ", row, item)
+        console.log("row start: ", row?.name, id)
         const song = {
           uid: row?._id,
           name: row?.name,
@@ -108,6 +103,8 @@ export default function DetailsScreen() {
       
     })
 
+    setIsLoading(false);
+
     fetch()
   }, []);
   
@@ -122,27 +119,9 @@ export default function DetailsScreen() {
   }
 
 
-  // const onPageScroll = (e: any) => {
-  //   console.log("onPageScroll: ", e.nativeEvent.position)
-
-    // const fetch = (async()=> {
-    //   let arr = []
-
-    // })
-
-    // fetch()
-
-  //};
-
   const onPageSelected = (e: any) => {
-    //console.log(e.nativeEvent.position, id)
-    let ind = Number(id) + Number(e.nativeEvent.position) - 1 
-
+    let ind = Number(id) + Number(e.nativeEvent.position)
     console.log("onPageSelected: ", id, e.nativeEvent.position, ind)
-
-    //sliderRef.current?.setPage(ind)
-
-    //if (ind < )
 
     const fetch = (async()=> {
       let arr = []
@@ -172,7 +151,7 @@ export default function DetailsScreen() {
 
     })
 
-    //fetch()
+    fetch()
   };
 
   const onPageScroll = (e: any) => {    
@@ -214,7 +193,7 @@ export default function DetailsScreen() {
                 ref={sliderRef}
                 testID="pager-view"
                 style={styles.pagerView}
-                initialPage={Number(id)-1}
+                initialPage={0}
                 pageMargin={10}
                 onPageScroll={onPageScroll}
                 onPageSelected={onPageSelected}
