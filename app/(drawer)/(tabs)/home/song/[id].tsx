@@ -76,11 +76,11 @@ export default function DetailsScreen() {
     setIsLoading(true);
 
     const fetch = (async()=> {
-      const pages = new Array(555);
+      let pages = [] //new Array(555);
       await db.withTransactionAsync(async () => {
-        const allRows = await db.getAllAsync<Todo>(`SELECT * FROM songs WHERE _id<10`);
-        for (const row of allRows) {
-          //console.log(row.name, row.number);
+        const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${id}`);
+        //for (const row of allRows) {
+          console.log(row?.number, row?.name);
 
           const song = {
             uid: row?._id,
@@ -89,10 +89,11 @@ export default function DetailsScreen() {
             number: row?.number,
           };
 
-          pages[Number(row?._id)-1] = song
+          //pages[Number(row?._id)-1] = song
+          pages.push(song)
    
-        }
-        
+        //}
+        setSongName(song.name)
         setSongs(pages);
 
       });
@@ -105,11 +106,6 @@ export default function DetailsScreen() {
   }, []);
   
 
-  useEffect(() => {
-    //console.log("asdasd")
-    sliderRef.current?.setPage(Number(id)-1)
-  }, [songName]); 
-
   if (isLoading) {
       return (
         <View style={{flex:1, justifyContent:'center',alignItems:'center'}}>
@@ -118,15 +114,38 @@ export default function DetailsScreen() {
       );
   }
 
-
   const onPageSelected = (e: any) => {
     let ind = Number(id) + Number(e.nativeEvent.position)
     console.log("onPageSelected: ", id, e.nativeEvent.position, ind)
     let position = ind-1
     let title = songs[position]
-    setSongName(title?.name)
-    setTitle(title?.uid)
-    //sliderRef.current?.setPage(Number(id)-1)
+
+    // const fetch = (async()=> {
+    //   let arr = []
+    //   await db.withTransactionAsync(async () => {
+    //     const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${Number(id)+1}`);
+    //     //console.log("row: ", row, item)
+    //     const song = {
+    //       uid: row?._id,
+    //       name: row?.name,
+    //       text: row?.song,
+    //       number: row?.number,
+    //     };
+
+    //     setSong(song);
+    //   });
+      
+    //   songs.push(song)
+
+    //   setSongs(songs);
+
+    // })
+
+    // fetch()
+    
+    //setSongName(title?.name)
+    //setTitle(title?.uid)
+    //setSongId(e.nativeEvent.position)
   };
 
   const onPageScrollStateChanged = (e: any) => {
@@ -138,6 +157,7 @@ export default function DetailsScreen() {
     // const offset = e.nativeEvent.offset
     //console.log("position: ", position)
     // console.log("offset: ", offset)
+    
   };
 
   interface Todo {
@@ -179,10 +199,8 @@ export default function DetailsScreen() {
                 onPageScrollStateChanged={onPageScrollStateChanged}
               >
                 {songs.map((page: any) => (
-                  <View key={page.uid} collapsable={false}>
-                    
-                    <ScrollView style={styles.scrollStyle}>
-                      
+                  <View key={page.uid} collapsable={false}>      
+                    <ScrollView style={styles.scrollStyle}>       
                       <Card>
                         <View style={[styles.slide] }>
                           <Text style={styles.text}>{page.text}</Text>
