@@ -29,7 +29,9 @@ export default function DetailsScreen() {
   const [songs, setSongs] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [song, setSong] = useState<any>({});
+  const [songId, setSongId] = useState<any>('');
   const [songName, setSongName] = useState<any>('');
+  const [songText, setSongText] = useState<any>('');
 
   const sliderRef = useRef<PagerView>(null);
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
@@ -74,33 +76,27 @@ export default function DetailsScreen() {
     setIsLoading(true);
 
     const fetch = (async()=> {
-      const pages = new Array(555);;
-
+      const pages = new Array(555);
       await db.withTransactionAsync(async () => {
-        const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${id}`);
-        console.log("row start: ", row?.name, id)
-        const song = {
-          uid: row?._id,
-          name: row?.name,
-          text: row?.song,
-          number: row?.number,
-        };
+        const allRows = await db.getAllAsync<Todo>(`SELECT * FROM songs WHERE _id<10`);
+        for (const row of allRows) {
+          //console.log(row.name, row.number);
 
-        setSongName(row?.name)
+          const song = {
+            uid: row?._id,
+            name: row?.name,
+            text: row?.song,
+            number: row?.number,
+          };
 
-        setSong(song);
-        pages[Number(id)-1] = song
-
-        console.log(pages)
-
+          pages[Number(row?._id)-1] = song
+   
+        }
+        
         setSongs(pages);
-        //sliderRef.current?.setPage(Number(id))
 
-        setIsLoading(false);
       });
-
-      setIsLoading(false);
-      
+    
     })
 
     setIsLoading(false);
@@ -109,6 +105,10 @@ export default function DetailsScreen() {
   }, []);
   
 
+  useEffect(() => {
+    //console.log("asdasd")
+    sliderRef.current?.setPage(Number(id)-1)
+  }, [songName]); 
 
   if (isLoading) {
       return (
@@ -122,42 +122,21 @@ export default function DetailsScreen() {
   const onPageSelected = (e: any) => {
     let ind = Number(id) + Number(e.nativeEvent.position)
     console.log("onPageSelected: ", id, e.nativeEvent.position, ind)
+    let position = ind-1
+    let title = songs[position]
+    setSongName(title?.name)
+    setTitle(title?.uid)
+    //sliderRef.current?.setPage(Number(id)-1)
+  };
 
-    const fetch = (async()=> {
-      let arr = []
-      await db.withTransactionAsync(async () => {
-        const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${ind}`);
-        console.log("row: ", row?.name)
-        const song = {
-          uid: row?._id,
-          name: row?.name,
-          text: row?.song,
-          number: row?.number,
-        };
-
-        setSong(song);
-        setSongName(row?.name)
-      });
-
-      //songs.push(song)
-      //console.log("Длина массива: ", songs.length)
-
-      setTitle(ind)
-
-      songs[Number(ind)] = song
-
-      setSongs(songs);
-      //sliderRef.current?.setPage(ind)
-
-    })
-
-    fetch()
+  const onPageScrollStateChanged = (e: any) => {
+    //console.log(e.nativeEvent.position);
   };
 
   const onPageScroll = (e: any) => {    
-    // const position = e.nativeEvent.position
+    const position = e.nativeEvent.position
     // const offset = e.nativeEvent.offset
-    // console.log("position: ", position)
+    //console.log("position: ", position)
     // console.log("offset: ", offset)
   };
 
@@ -186,8 +165,8 @@ export default function DetailsScreen() {
               source={images.headerSong}
               resizeMode="cover"
             />
+            
             <Text style={{fontSize: 25, position: 'absolute', top: 155, left: 15}}>{songName}</Text>
-
             <View style={{height: 2000, backgroundColor: '#fff'}}>
               <PagerView
                 ref={sliderRef}
@@ -197,16 +176,18 @@ export default function DetailsScreen() {
                 pageMargin={10}
                 onPageScroll={onPageScroll}
                 onPageSelected={onPageSelected}
+                onPageScrollStateChanged={onPageScrollStateChanged}
               >
                 {songs.map((page: any) => (
-                  <View key={page._id} collapsable={false}>
+                  <View key={page.uid} collapsable={false}>
+                    
                     <ScrollView style={styles.scrollStyle}>
-                          <Card>
-                            <View style={[styles.slide] }>
-                              {/* <Text style={styles.title}>{page.name}</Text> */}
-                              <Text style={styles.text}>{page.text}</Text>
-                            </View>
-                          </Card>        
+                      
+                      <Card>
+                        <View style={[styles.slide] }>
+                          <Text style={styles.text}>{page.text}</Text>
+                        </View>
+                      </Card>        
                     </ScrollView>
                   </View>
                   )
