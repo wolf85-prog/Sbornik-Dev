@@ -29,6 +29,7 @@ export default function DetailsScreen() {
   const [songs, setSongs] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [song, setSong] = useState<any>({});
+  const [songName, setSongName] = useState<any>('');
 
   const sliderRef = useRef<PagerView>(null);
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
@@ -73,13 +74,13 @@ export default function DetailsScreen() {
     setIsLoading(true);
 
     const fetch = (async()=> {
-      const pages = [];
-      const sortedSongs = [...songsData].sort((a, b) => {       
-        var songA = a.name, songB = b.name
-        return (songA < songB) ? -1 : (songA > songB) ? 1 : 0;  //сортировка по возрастанию 
-      })
+      const pages = new Array(555);;
+      // const sortedSongs = [...songsData].sort((a, b) => {       
+      //   var songA = a.name, songB = b.name
+      //   return (songA < songB) ? -1 : (songA > songB) ? 1 : 0;  //сортировка по возрастанию 
+      // })
 
-      let arr = []
+      //let arr = []
       await db.withTransactionAsync(async () => {
         const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${id}`);
         //console.log("row: ", row, item)
@@ -90,11 +91,15 @@ export default function DetailsScreen() {
           number: row?.number,
         };
 
-        setSong(song);
-        arr.push(song)
+        setSongName(row?.name)
 
-        setSongs(arr);
-        sliderRef.current?.setPage(Number(id))
+        setSong(song);
+        pages[Number(id)-1] = song
+
+        console.log(pages)
+
+        setSongs(pages);
+        //sliderRef.current?.setPage(Number(id))
 
         setIsLoading(false);
       });
@@ -131,8 +136,13 @@ export default function DetailsScreen() {
 
   const onPageSelected = (e: any) => {
     //console.log(e.nativeEvent.position, id)
-    let ind = Number(id) + Number(e.nativeEvent.position)
-    console.log("onPageSelected: ", ind)
+    let ind = Number(id) + Number(e.nativeEvent.position) - 1 
+
+    console.log("onPageSelected: ", id, e.nativeEvent.position, ind)
+
+    //sliderRef.current?.setPage(ind)
+
+    //if (ind < )
 
     const fetch = (async()=> {
       let arr = []
@@ -147,18 +157,29 @@ export default function DetailsScreen() {
         };
 
         setSong(song);
-        
+        setSongName(row?.name)
       });
 
       //songs.push(song)
+      //console.log("Длина массива: ", songs.length)
+
       setTitle(ind)
 
-      //setSongs(songs);
-      sliderRef.current?.setPage(ind)
+      songs[Number(ind)] = song
+
+      setSongs(songs);
+      //sliderRef.current?.setPage(ind)
 
     })
 
-    fetch()
+    //fetch()
+  };
+
+  const onPageScroll = (e: any) => {    
+    // const position = e.nativeEvent.position
+    // const offset = e.nativeEvent.offset
+    // console.log("position: ", position)
+    // console.log("offset: ", offset)
   };
 
   interface Todo {
@@ -186,15 +207,16 @@ export default function DetailsScreen() {
               source={images.headerSong}
               resizeMode="cover"
             />
+            <Text style={{fontSize: 25, position: 'absolute', top: 155, left: 15}}>{songName}</Text>
 
             <View style={{height: 2000, backgroundColor: '#fff'}}>
               <PagerView
                 ref={sliderRef}
                 testID="pager-view"
                 style={styles.pagerView}
-                initialPage={0}
+                initialPage={Number(id)-1}
                 pageMargin={10}
-                //onPageScroll={onPageScroll}
+                onPageScroll={onPageScroll}
                 onPageSelected={onPageSelected}
               >
                 {songs.map((page: any) => (
@@ -202,7 +224,7 @@ export default function DetailsScreen() {
                     <ScrollView style={styles.scrollStyle}>
                           <Card>
                             <View style={[styles.slide] }>
-                              <Text style={styles.title}>{page.name}</Text>
+                              {/* <Text style={styles.title}>{page.name}</Text> */}
                               <Text style={styles.text}>{page.text}</Text>
                             </View>
                           </Card>        
