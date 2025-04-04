@@ -211,6 +211,10 @@ export default function DetailsScreen() {
         );
   };
 
+  const onButtonPress = ()=> {
+    console.log("press")
+  }
+
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ 
@@ -235,7 +239,7 @@ export default function DetailsScreen() {
               <Text style={[styles.title,]}>{songName}</Text>
             </View>
 
-            <View style={{height: 2000}}>
+            <View style={{height: 1000}}>
               <PagerView
                 ref={sliderRef}
                 testID="pager-view"
@@ -260,8 +264,16 @@ export default function DetailsScreen() {
                 )}
               </PagerView>
             </View>
-            
-          </Animated.ScrollView>      
+
+          </Animated.ScrollView>   
+
+          <TouchableOpacity
+              style={styles.floatingButton}
+              onPress={onButtonPress}
+          >
+            <Ionicons name="heart-circle-outline" size={80} color="red" />
+            {/* <Ionicons name="heart-circle-sharp" size={80} color="red" /> */}
+          </TouchableOpacity>   
         </SafeAreaView>
       </Provider>
     </View>
@@ -309,4 +321,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#e5e5e5',
   },
+  floatingButton: {
+    position: 'absolute',
+    width: 150,
+    height: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+    bottom: 0,
+    right: 0,
+  }
 });
