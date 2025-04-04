@@ -76,10 +76,10 @@ export default function DetailsScreen() {
     setIsLoading(true);
 
     const fetch = (async()=> {
-      let pages = [] //new Array(555);
+      let pages = new Array(555);
       await db.withTransactionAsync(async () => {
-        const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${id}`);
-        //for (const row of allRows) {
+        const allRows = await db.getAllAsync<Todo>(`SELECT * FROM songs WHERE _id<10`);
+        for (const row of allRows) {
           console.log(row?.number, row?.name);
 
           const song = {
@@ -92,7 +92,9 @@ export default function DetailsScreen() {
           //pages[Number(row?._id)-1] = song
           pages.push(song)
    
-        //}
+        }
+
+        console.log(pages)
         setSongName(song.name)
         setSongs(pages);
 
