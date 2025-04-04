@@ -1,13 +1,14 @@
 import React, {useEffect, useRef, useState, useMemo} from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Image, Dimensions } from 'react-native';
-//import AppIntroSlider from 'react-native-app-intro-slider';
+import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { Ionicons, FontAwesome, Entypo, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { Stack } from "expo-router";
-import Card from '../../../../../components/ui/Card';
+import CardSong from '../../../../../components/ui/CardSong';
 
 import songsData from './../../../../../data/songsData.js';
 import { PAGES, createPage } from './../../../../../constants/utils';
 import { images } from "../../../../../constants";
+import { Colors } from '@/constants/Colors';
 import { useSQLiteContext } from "expo-sqlite";
 import {
   Provider,
@@ -76,11 +77,11 @@ export default function DetailsScreen() {
     setIsLoading(true);
 
     const fetch = (async()=> {
-      let pages = new Array(555);
+      let pages = []//new Array(555);
       await db.withTransactionAsync(async () => {
-        const allRows = await db.getAllAsync<Todo>(`SELECT * FROM songs WHERE _id<10`);
-        for (const row of allRows) {
-          console.log(row?.number, row?.name);
+        const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${id}`);
+        //for (const row of allRows) {
+          //console.log(row?.number, row?.name);
 
           const song = {
             uid: row?._id,
@@ -92,9 +93,9 @@ export default function DetailsScreen() {
           //pages[Number(row?._id)-1] = song
           pages.push(song)
    
-        }
+        //}
 
-        console.log(pages)
+        //console.log(pages)
         setSongName(song.name)
         setSongs(pages);
 
@@ -118,7 +119,7 @@ export default function DetailsScreen() {
 
   const onPageSelected = (e: any) => {
     let ind = Number(id) + Number(e.nativeEvent.position)
-    console.log("onPageSelected: ", id, e.nativeEvent.position, ind)
+    //console.log("onPageSelected: ", id, e.nativeEvent.position, ind)
     let position = ind-1
     let title = songs[position]
 
@@ -169,13 +170,56 @@ export default function DetailsScreen() {
     number: number;
   }
 
+  const headerRight = () => {
+        return (
+          <>
+            
+
+            <TouchableOpacity
+              // onPress={()=>router.push("/modal")}
+              style={{marginRight: 15}}
+            >
+              {/* <FontAwesome name="dots-three-vertical" size={28} color="white" /> */}
+              <Entypo name="note" size={20} color="white" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              // onPress={()=>router.push("/modal")}
+              style={{marginRight: 15}}
+            >
+              {/* <FontAwesome name="dots-three-vertical" size={28} color="white" /> */}
+              <Entypo name="dial-pad" size={20} color="white" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              // onPress={()=>router.push("/modal")}
+              style={{marginRight: 15}}
+            >
+              {/* <FontAwesome name="dots-three-vertical" size={28} color="white" /> */}
+              <SimpleLineIcons name="size-fullscreen" size={20} color="white" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              // onPress={()=>router.push("/modal")}
+              style={{marginRight: 15}}
+            >
+              {/* <FontAwesome name="dots-three-vertical" size={28} color="white" /> */}
+              <Entypo name="dots-three-vertical" size={22} color="white" />
+            </TouchableOpacity>
+          </>
+          
+        );
+  };
+
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ 
         headerTransparent: true,
         headerBackground: ()=> <Animated.View style={[styles.header, headerAnimatedStyle]} />,
         headerShown: true, 
-        title: `№ ${title}` 
+        title: `№ ${title}` ,
+        headerTintColor: '#fff',
+        headerRight: headerRight,
         }} 
       />
 
@@ -187,14 +231,16 @@ export default function DetailsScreen() {
               source={images.headerSong}
               resizeMode="cover"
             />
-            
-            <Text style={{fontSize: 25, position: 'absolute', top: 155, left: 15}}>{songName}</Text>
-            <View style={{height: 2000, backgroundColor: '#fff'}}>
+            <View style={{position: 'absolute', top: 80, width: '100%', padding: 15}}>
+              <Text style={[styles.title,]}>{songName}</Text>
+            </View>
+
+            <View style={{height: 2000}}>
               <PagerView
                 ref={sliderRef}
                 testID="pager-view"
                 style={styles.pagerView}
-                initialPage={0}
+                initialPage={3}
                 pageMargin={10}
                 onPageScroll={onPageScroll}
                 onPageSelected={onPageSelected}
@@ -203,11 +249,11 @@ export default function DetailsScreen() {
                 {songs.map((page: any) => (
                   <View key={page.uid} collapsable={false}>      
                     <ScrollView style={styles.scrollStyle}>       
-                      <Card>
+                      <CardSong>
                         <View style={[styles.slide] }>
                           <Text style={styles.text}>{page.text}</Text>
                         </View>
-                      </Card>        
+                      </CardSong>        
                     </ScrollView>
                   </View>
                   )
@@ -233,7 +279,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   header: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.darkBlue,
     height: 100,
   },
   scrollStyle: {
@@ -256,11 +302,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    color: 'rgba(0, 0, 0, 0.8)',
+    color: 'rgba(255, 255, 255, 0.8)',
     textAlign: 'center',
   },
   pagerView: {
     flex: 1,
-    backgroundColor: '#e9e9e9',
+    backgroundColor: '#e5e5e5',
   },
 });
