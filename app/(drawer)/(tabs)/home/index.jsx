@@ -30,16 +30,20 @@ export default function Index() {
 
   const {currentTheme} = useContext(ThemeContext)
 
+
+
   const headerRight = () => {
     return (
       <TouchableOpacity
-        // onPress={()=>router.push("/modal")}
+        onPress={()=>{}}
         style={{marginRight: 10}}
       >
         <Entypo name="dots-three-vertical" size={22} color="white" />
       </TouchableOpacity>
     );
   };
+
+
 
   return (
     <View style={styles.container}>
@@ -179,6 +183,16 @@ export function Content() {
         //showHideTransition={statusBarTransition}
         //hidden={hidden}
       />
+      <Menu onSelect={value => alert(`Selected number: ${value}`)}>
+        <MenuTrigger text='Select option' />
+        <MenuOptions>
+          <MenuOption value={1} text='One' />
+          <MenuOption value={2}>
+            <Text style={{color: 'red'}}>Two</Text>
+          </MenuOption>
+          <MenuOption value={3} disabled={true} text='Three' />
+        </MenuOptions>
+      </Menu>
       <TextInput 
         placeholder="Поиск..." 
         clearButtonMode='always' 
