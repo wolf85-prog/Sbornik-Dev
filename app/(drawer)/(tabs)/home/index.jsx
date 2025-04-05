@@ -1,8 +1,8 @@
-import { SafeAreaView, Text, View, StyleSheet, FlatList, TextInput, TouchableOpacity, Image, ActivityIndicator } from "react-native";
+import { SafeAreaView, StatusBar, Text, View, StyleSheet, FlatList, TextInput, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import Card from '../../../../components/ui/Card';
 import { Stack, useRouter } from 'expo-router';
 import { DrawerToggleButton } from "@react-navigation/drawer";
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons';
 
 //import * as SQLite from 'expo-sqlite';
 import React, { useContext } from 'react'
@@ -36,7 +36,7 @@ export default function Index() {
         // onPress={()=>router.push("/modal")}
         style={{marginRight: 10}}
       >
-        <FontAwesome name="plus-circle" size={28} color="blue" />
+        <Entypo name="dots-three-vertical" size={22} color="white" />
       </TouchableOpacity>
     );
   };
@@ -46,14 +46,16 @@ export default function Index() {
       <Stack.Screen options={{ 
         headerShown: true, 
         title: "Главная", 
-        //headerRight: headerRight,
-        headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />),
-        headerStyle: {backgroundColor: currentTheme === 'dark' ? Colors.dark : Colors.white}
-        }} 
+        headerRight: headerRight,
+        headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
+        headerStyle: {backgroundColor: '#26489a'},    
+        headerTintColor: 'white',
+        //headerTitleStyle: {fontWeight: 400},
+        }}
       />
       
       <Provider>
-          <Content />
+        <Content />
       </Provider>
       
     </View>
@@ -161,6 +163,13 @@ export function Content() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar
+        animated={true}
+        backgroundColor = '#26489a'
+        //barStyle={statusBarStyle}
+        //showHideTransition={statusBarTransition}
+        //hidden={hidden}
+      />
       <TextInput 
         placeholder="Поиск..." 
         clearButtonMode='always' 
@@ -188,6 +197,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f3f3f3',
     width: '100%',
+  },
+
+  header: {
+    backgroundColor: Colors.darkBlue,
   },
 
   listSongs:{

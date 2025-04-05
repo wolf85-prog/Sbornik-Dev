@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState, useMemo} from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { StatusBar, View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Ionicons, FontAwesome, Entypo, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { Stack } from "expo-router";
 import CardSong from '../../../../../components/ui/CardSong';
@@ -229,6 +229,13 @@ export default function DetailsScreen() {
 
       <Provider>
         <SafeAreaView style={styles.container}> 
+          <StatusBar
+            animated={true}
+            backgroundColor= {Colors.darkBlue}
+            //barStyle={statusBarStyle}
+            //showHideTransition={statusBarTransition}
+            //hidden={hidden}
+          />
           <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
             <Image 
               style={[styles.image, imageAnimatedStyle]}
