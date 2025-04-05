@@ -75,6 +75,7 @@ export function Content() {
   const [error, setError] = useState(null)
   const [fullData, setFullData] = useState([])
   const [textInputValue, setTextInputValue] = useState("");
+  const [favorite, setFavorite] = useState([])
 
   const handleSearch = (query) => {
     setSearchQuery(query)
@@ -128,6 +129,14 @@ export function Content() {
 
     fetch()
   }, []);
+
+  const pressStar = (item, fav) => {
+    console.log("press: ", item.number)
+    let arr = []
+    arr[item.number-1] = !fav
+    //console.log(arr)
+    setFavorite(arr)
+  }
   
   function Item({ item }) {
     return (
@@ -144,7 +153,7 @@ export function Content() {
             </View>
 
             <View style={styles.right_section}>
-              <Ionicons name="star-outline" size={24} color="#feed33" />
+              <Ionicons onPress={()=> pressStar(item, favorite[item.number-1])} name={favorite[item.number-1] ? "star" : "star-outline"} size={24} color="#feed33" />
             </View>
           </View>
           

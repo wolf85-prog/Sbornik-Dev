@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import {Ionicons, MaterialIcons, Feather} from '@expo/vector-icons';
 import { DrawerToggleButton } from "@react-navigation/drawer";
 
 export default function TabLayout() {
@@ -36,7 +36,8 @@ export default function TabLayout() {
             // headerShown: false,
             // headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
             tabBarIcon: ({ color, focused }) => (
-              <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
+              // <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
+              <MaterialIcons name="sort-by-alpha" size={24} color={color} />
             ),
           }}
         />
@@ -47,7 +48,7 @@ export default function TabLayout() {
             // headerShown: true,
             // headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
             tabBarIcon: ({ color, focused }) => (
-              <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
+              <MaterialIcons name="playlist-play" size={24} color={color} />
             ),
           }}
         />
@@ -58,7 +59,7 @@ export default function TabLayout() {
             // headerShown: true,
             // headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
             tabBarIcon: ({ color, focused }) => (
-              <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
+              <Feather name="heart" size={24} color={color} />
             ),
           }}
         />
@@ -69,7 +70,7 @@ export default function TabLayout() {
             // headerShown: true,
             // headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
             tabBarIcon: ({ color, focused }) => (
-              <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
+              <MaterialIcons name="event-note" size={24} color={color} />
             ),
           }}
         />
