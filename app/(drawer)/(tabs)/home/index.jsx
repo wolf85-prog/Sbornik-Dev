@@ -19,7 +19,8 @@ const PlaceholderImage = require('@/assets/images/background-image.png');
 import songsData from './../../../../data/songsData.js';
 //import { ThemeContext } from "@react-navigation/native";
 import { ThemeContext } from "./../../../../context/ThemeContext.tsx"
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import { COLORS } from "../../../../constants/colors.js";
+import PopupMenu from "../../../../components/ui/PopupMenu.js";
 
 const loadDatabase = async()=> {
   const dbName = 'sbornik.db'
@@ -27,19 +28,18 @@ const loadDatabase = async()=> {
 }
 
 export default function Index() {
-
   const {currentTheme} = useContext(ThemeContext)
 
-
+  const options = [
+          {
+              title: "Настройки",
+              action: ()=>alert('dffdf')
+          },
+      ]
 
   const headerRight = () => {
     return (
-      <TouchableOpacity
-        onPress={()=>{}}
-        style={{marginRight: 10}}
-      >
-        <Entypo name="dots-three-vertical" size={22} color="white" />
-      </TouchableOpacity>
+      <PopupMenu options={options} />
     );
   };
 
@@ -66,7 +66,7 @@ export default function Index() {
   );
 }
 
-
+//---------------------------------------------------------------------------------
 
 export function Content() {
   //const db = useSQLiteContext();
@@ -183,16 +183,6 @@ export function Content() {
         //showHideTransition={statusBarTransition}
         //hidden={hidden}
       />
-      <Menu onSelect={value => alert(`Selected number: ${value}`)}>
-        <MenuTrigger text='Select option' />
-        <MenuOptions>
-          <MenuOption value={1} text='One' />
-          <MenuOption value={2}>
-            <Text style={{color: 'red'}}>Two</Text>
-          </MenuOption>
-          <MenuOption value={3} disabled={true} text='Three' />
-        </MenuOptions>
-      </Menu>
       <TextInput 
         placeholder="Поиск..." 
         clearButtonMode='always' 
@@ -223,7 +213,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: COLORS.darkBlue,
   },
 
   listSongs:{

@@ -8,12 +8,14 @@ import CardSong from '../../../../../components/ui/CardSong';
 import songsData from './../../../../../data/songsData.js';
 import { PAGES, createPage } from './../../../../../constants/utils';
 import { images } from "../../../../../constants";
-import { Colors } from '@/constants/Colors';
+import { COLORS } from '../../../../../constants/colors.js';
 import { useSQLiteContext } from "expo-sqlite";
 import {
   Provider,
 } from "react-native-paper";
 import { ScrollView } from 'react-native-gesture-handler';
+
+import PopupMenu from "../../../../../components/ui/PopupMenu.js";
 
 import PagerView from 'react-native-pager-view';
 import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated';
@@ -22,6 +24,33 @@ import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewO
 
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
+
+const data = [
+  {
+    title: "Добавить в плейлист",
+    action: ()=>alert('dffdf')
+  },
+  {
+      title: "Добавить в категорию",
+      action: ()=>alert('dffdf')
+  },
+  {
+      title: "Добавить заметку",
+      action: ()=>alert('dffdf')
+  },
+  {
+      title: "Тональность",
+      action: ()=>alert('dffdf')
+  },
+  {
+      title: "Размер шрифта",
+      action: ()=>alert('dffdf')
+  },
+  {
+    title: "Настройки",
+    action: ()=>alert('dffdf')
+},
+]
 
 export default function DetailsScreen() {
 
@@ -173,7 +202,6 @@ export default function DetailsScreen() {
   const headerRight = () => {
         return (
           <>
-            
 
             <TouchableOpacity
               // onPress={()=>router.push("/modal")}
@@ -199,13 +227,7 @@ export default function DetailsScreen() {
               <SimpleLineIcons name="size-fullscreen" size={20} color="white" />
             </TouchableOpacity>
 
-            <TouchableOpacity
-              // onPress={()=>router.push("/modal")}
-              style={{marginRight: 15}}
-            >
-              {/* <FontAwesome name="dots-three-vertical" size={28} color="white" /> */}
-              <Entypo name="dots-three-vertical" size={22} color="white" />
-            </TouchableOpacity>
+            <PopupMenu options={data}/>
           </>
           
         );
@@ -231,7 +253,7 @@ export default function DetailsScreen() {
         <SafeAreaView style={styles.container}> 
           <StatusBar
             animated={true}
-            backgroundColor= {Colors.darkBlue}
+            backgroundColor= {COLORS.darkBlue}
             //barStyle={statusBarStyle}
             //showHideTransition={statusBarTransition}
             //hidden={hidden}
@@ -298,7 +320,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   header: {
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: COLORS.darkBlue,
     height: 100,
   },
   scrollStyle: {

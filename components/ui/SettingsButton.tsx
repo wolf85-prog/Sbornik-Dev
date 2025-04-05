@@ -2,8 +2,8 @@ import { StyleSheet, View, Pressable, Text, TouchableOpacity } from 'react-nativ
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-//import { Colors } from './../../constants/';
+//import { Colors } from 'react-native/Libraries/NewAppScreen';
+//import  { COLORS }  from '../../constants/colors.js';
 
 type SettingsButtonProps = {
   icon: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: '#fff',
     padding: 20, 
     borderRadius: 10,
     marginBottom: 15,

@@ -5,7 +5,7 @@ import React, { useContext } from 'react'
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 // import { Switch } from 'react-native-paper';
-import { Colors } from '../../../constants/Colors';
+import { COLORS } from '../../../constants/colors';
 import SettingsButton from '../../../components/ui/SettingsButton'
 import { ThemeContext } from '@/context/ThemeContext';
 import { SafeAreaView } from 'react-native';
@@ -38,7 +38,7 @@ export default function SettingsScreen() {
   return (
     <>
       <Stack.Screen options={{ headerShown: true, title: "Настройки", headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) }} />
-      <SafeAreaView style={[styles.container,{backgroundColor: currentTheme === 'dark' ? Colors.dark : Colors.light}]} >     
+      <SafeAreaView style={[styles.container,{backgroundColor: currentTheme === 'dark' ? COLORS.dark : COLORS.light}]} >     
         <ScrollView>
 
           <Text style={styles.title}>Настройка темы</Text>
@@ -113,7 +113,7 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.gray,
+    backgroundColor: COLORS.gray,
     //backgroundColor: '#25292e',
     // justifyContent: 'center',
     // alignItems: 'center',

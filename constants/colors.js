@@ -1,4 +1,4 @@
-export const Colors = {
+export const COLORS =  {
   light: '#FBFBFB',
   dark: '#0c263b',
   gradientForm: '#A376F1',
