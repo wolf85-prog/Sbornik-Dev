@@ -27,6 +27,7 @@ const IMG_HEIGHT = 300;
 
 // массив слов для выделения
 const selectedWords = ["Hm", "D", "E"]
+const chordRegex = /([A-G]{1}[A-Gmjsu0-9/#]{0,4})(?!\w)/g;
 
 // это компонент выделенного слова
 // const Selected = (text: any) => {
@@ -249,6 +250,46 @@ export default function DetailsScreen() {
     console.log("press")
   }
 
+  const Chord = (name: any) => {
+    //console.log(name)
+    return (
+      <Text style={styles.chordName}>
+        {name}
+      </Text>
+    )
+  }
+
+  // это компонент для всего текста
+  const AllText = ({text}: any) => {
+
+    const [separators, setSeparators] = useState([])
+
+    const parsedText = text.split("\n").map((row: any) => {
+      const rowArr = row.split(chordRegex).map((charOrSpace: any) => {
+        if (chordRegex.test(charOrSpace)) {
+          
+          return <Chord name={charOrSpace} />
+        }
+        return charOrSpace;
+      });
+  
+      //console.log(rowArr)
+      return rowArr;
+    });
+
+    return (
+      <>
+        {parsedText.map((row: any) => (
+           //if (row) {
+              //console.log(row[1])
+              <Text>{row[0]}</Text>
+           //}
+        ))}
+      </>
+    )
+  }
+
+
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ 
@@ -296,8 +337,8 @@ export default function DetailsScreen() {
                     <ScrollView style={styles.scrollStyle}>       
                       <CardSong>
                         <View style={[styles.slide] }>
-                          {/* <AllText text={page.text}></AllText> */}
-                          <Text style={styles.text}>{page.text}</Text>
+                          <AllText text={page.text}></AllText>
+                          {/* <Text style={styles.text}>{page.text}</Text> */}
                         </View>
                       </CardSong>        
                     </ScrollView>
@@ -371,5 +412,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     bottom: 0,
     right: 0,
+  },
+
+  chordName: {
+    color: 'red',
   }
 });
