@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState, useMemo} from 'react';
+import React, {useEffect, useRef, useState, useMemo, Fragment} from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { StatusBar, View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Ionicons, FontAwesome, Entypo, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
@@ -24,6 +24,16 @@ import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewO
 
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
+
+// массив слов для выделения
+const selectedWords = ["Hm", "D", "E"]
+
+// это компонент выделенного слова
+// const Selected = (text: any) => {
+//   return (
+//     <p style={{color: 'red'}}>{text}</p>
+//   )
+// }
 
 const data = [
   {
@@ -62,6 +72,8 @@ export default function DetailsScreen() {
   const [songId, setSongId] = useState<any>('');
   const [songName, setSongName] = useState<any>('');
   const [songText, setSongText] = useState<any>('');
+
+  const [separators, setSeparators] = useState<any>([])
 
   const sliderRef = useRef<PagerView>(null);
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
@@ -284,6 +296,7 @@ export default function DetailsScreen() {
                     <ScrollView style={styles.scrollStyle}>       
                       <CardSong>
                         <View style={[styles.slide] }>
+                          {/* <AllText text={page.text}></AllText> */}
                           <Text style={styles.text}>{page.text}</Text>
                         </View>
                       </CardSong>        
