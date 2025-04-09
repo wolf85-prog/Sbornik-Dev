@@ -16,7 +16,9 @@ export default function AccordScreen() {
       <Stack.Screen options={{ 
         headerShown: true, 
         title: "Аккорды", 
-        headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) 
+        headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
+        headerStyle: {backgroundColor: '#26489a'}, 
+        headerTintColor: 'white',
       }} />
       <Provider>
         <Content />
@@ -57,13 +59,6 @@ export function Content() {
 
     setIsLoading(false);
   }, []);
-  
-
-  const Item = ({item}) => (
-    <TouchableOpacity style={styles.item} onPress={()=> {router.push('/accords/next-page')}} >
-      <Text style={styles.title}>{item.name}</Text>
-    </TouchableOpacity>
-  );
 
   if (isLoading) {
     return (
@@ -72,6 +67,43 @@ export function Content() {
       </View>
     );
   }
+  
+
+  const Item = ({item}) => (
+    <TouchableOpacity style={styles.item} onPress={()=> {router.push('/accords/next-page')}} >
+      <Text style={styles.title}>{item.name}</Text>
+    </TouchableOpacity>
+  );
+
+
+  const renderSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "89%",
+          backgroundColor: "#CED0CE",
+          marginLeft: "5%",
+        }}
+      />
+    );
+  };
+
+  const renderFooter = () => {
+    if (isLoading) return null;
+  
+    return (
+      <View
+        style={{
+          paddingVertical: 10,
+          borderTopWidth: 1,
+          borderColor: "#CED0CE",
+        }}
+      >
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -82,6 +114,7 @@ export function Content() {
         renderItem={({ item }) => <Item item={item}/>}
         keyExtractor={item => item.uid}
         // ItemSeparatorComponent={() => <View style={{height: 15}} />}
+        ItemSeparatorComponent={renderSeparator}
         contentContainerStyle={{  flexGrow: 1,  gap: 15 }}
         // columnWrapperStyle={{ gap: GAP_BETWEEN_COLUMNS }}
         ListEmptyComponent={() =>
@@ -89,6 +122,7 @@ export function Content() {
             Список аккордов пуст
           </Text>
         }
+        //ListFooterComponent={renderFooter}
       />       
     </SafeAreaView>
   );
@@ -99,25 +133,24 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f3f3f3',
     width: '100%',
+    paddingHorizontal: 10,
+    paddingVertical: 20,
   },
 
   listSongs:{
-    padding: 15,
+    padding: 10,
     flex: 1,
   },
   text: {
     color: '#fff',
   },
   item: {
-    backgroundColor: '#a3a3a3',
-    padding: 20,
+    padding: 10,
     marginVertical: 8,
-    marginHorizontal: 16,
-    color: '#fff',
-    borderRadius: 5
+    marginHorizontal: 5,
   },
   title: {
-    fontSize: 32,
+    fontSize: 18,
     color: '#000'
   },
 });
