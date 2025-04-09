@@ -1,5 +1,5 @@
 import { SafeAreaView, Text, View, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Link } from "expo-router";
+import { useLocalSearchParams } from 'expo-router';
 import { Stack, useRouter } from 'expo-router';
 import React from 'react'
 import { useEffect, useState } from "react";
@@ -8,27 +8,17 @@ import {Provider} from "react-native-paper";
 import { useSQLiteContext } from "expo-sqlite";
 //import filter from "lodash.filter"
 
-export default function AccordScreen() {
+export default function CategoryAccordScreen() {
 
-
-  return (
-    <View style={styles.container} >
-      <Stack.Screen options={{ 
-        headerShown: true, 
-        title: "Аккорды", 
-        headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
-        headerStyle: {backgroundColor: '#26489a'}, 
-        headerTintColor: 'white',
-      }} />
-      <Provider>
-        <Content />
-      </Provider>
-    </View>
-  );
-}
-
-export function Content() {
   const db = useSQLiteContext();
+
+  const [title, setTitle] = useState('');
+    const { category } = useLocalSearchParams(); 
+  
+    useEffect(() => {
+      console.log("id: ", category)
+      
+    }, [category])
 
   const router = useRouter();
 
@@ -43,12 +33,19 @@ export function Content() {
     const fetch = (async()=> {
 
       await db.withTransactionAsync(async () => {
-        const allRows = await db.getAllAsync('SELECT * FROM categories_accords');
+        const allRows = await db.getAllAsync(`SELECT * FROM accord_new WHERE _id_cat_acc=${category}`);
         const accords = allRows.map((row) => ({
           uid: row?._id,
-          name: row?.accord,
+          name: row?.name,
+          code: row?.code,
+          bare: row?.bare,
+          lad: row?.lad,
         }));
+
+        console.log(accords)
     
+        setTitle(accords[1].name)
+
         setAccords(accords);
 
         setIsLoading(false);
@@ -70,7 +67,7 @@ export function Content() {
   
 
   const Item = ({item}) => (
-    <TouchableOpacity style={styles.item} onPress={()=> {router.push(`/accords/categoryAcc/${item.uid}`)}} >
+    <TouchableOpacity style={styles.item} onPress={()=> {router.push('/accords/next-page')}} >
       <Text style={styles.title}>{item.name}</Text>
     </TouchableOpacity>
   );
@@ -81,9 +78,9 @@ export function Content() {
       <View
         style={{
           height: 1,
-          width: "95%",
+          width: "89%",
           backgroundColor: "#CED0CE",
-          marginLeft: "2%",
+          marginLeft: "5%",
         }}
       />
     );
@@ -106,25 +103,38 @@ export function Content() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={styles.container} >
+      <Stack.Screen options={{ 
+        headerShown: true, 
+        title: title, 
+        headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
+        headerStyle: {backgroundColor: '#26489a'}, 
+        headerTintColor: 'white',
+      }} />
 
-      <FlatList
-        style={styles.listSongs}
-        data={accords}
-        renderItem={({ item }) => <Item item={item}/>}
-        keyExtractor={item => item.uid}
-        // ItemSeparatorComponent={() => <View style={{height: 15}} />}
-        ItemSeparatorComponent={renderSeparator}
-        contentContainerStyle={{  flexGrow: 1,  gap: 15 }}
-        // columnWrapperStyle={{ gap: GAP_BETWEEN_COLUMNS }}
-        ListEmptyComponent={() =>
-          <Text>
-            Список аккордов пуст
-          </Text>
-        }
-        //ListFooterComponent={renderFooter}
-      />       
-    </SafeAreaView>
+      <Provider>
+        <SafeAreaView style={{ flex: 1 }}>
+
+          <FlatList
+            style={styles.listSongs}
+            data={accords}
+            renderItem={({ item }) => <Item item={item}/>}
+            keyExtractor={item => item.uid}
+            // ItemSeparatorComponent={() => <View style={{height: 15}} />}
+            ItemSeparatorComponent={renderSeparator}
+            contentContainerStyle={{  flexGrow: 1,  gap: 15 }}
+            // columnWrapperStyle={{ gap: GAP_BETWEEN_COLUMNS }}
+            ListEmptyComponent={() =>
+              <Text>
+                Список аккордов пуст
+              </Text>
+            }
+            //ListFooterComponent={renderFooter}
+          />       
+          </SafeAreaView>
+
+      </Provider>
+    </View>
   );
 }
 
@@ -133,7 +143,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f3f3f3',
     width: '100%',
-    paddingHorizontal: 0,
+    paddingHorizontal: 10,
     paddingVertical: 20,
   },
 
@@ -147,7 +157,7 @@ const styles = StyleSheet.create({
   item: {
     padding: 10,
     marginVertical: 8,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
   },
   title: {
     fontSize: 18,
