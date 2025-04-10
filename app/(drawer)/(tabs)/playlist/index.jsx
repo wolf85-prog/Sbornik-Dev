@@ -3,12 +3,15 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react'
 import { useEffect, useState } from "react";
 import { DrawerToggleButton } from "@react-navigation/drawer";
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Ionicons, FontAwesome, AntDesign, Entypo, MaterialIcons } from '@expo/vector-icons';
 import Card from '../../../../components/ui/Card';
 import { useSQLiteContext } from "expo-sqlite";
 import {Provider} from "react-native-paper";
+import { Button, Dialog, Portal } from 'react-native-paper';
 
 import filter from "lodash.filter"
+import PopupMenu from "./../../../../components/ui/PopupMenu.js";
+
 
 const PlaylistScreen = () => {
 
@@ -53,6 +56,18 @@ export function Content() {
   const [error, setError] = useState(null)
   const [fullData, setFullData] = useState([])
   const [textInputValue, setTextInputValue] = useState("");
+  const [playlistTitle, setPlaylistTitle] = useState("");
+
+  const dataMenu = [
+    {
+      title: "Редактировать",
+      action: ()=>alert('dffdf')
+    },
+    {
+        title: "Удалить",
+        action: ()=>alert('dffdf')
+    },
+  ]
 
   const handleSearch = (query) => {
     setSearchQuery(query)
@@ -97,10 +112,14 @@ export function Content() {
 
     setIsLoading(false);
   }, []);
+
+  const [visible, setVisible] = React.useState(false);
+
+  const hideDialog = () => setVisible(false);
   
   function Item({ item }) {
     return (
-      <Card>
+      <Card key={item.uid}>
         <TouchableOpacity onPress={()=> {router.push(`/`)}} >
           <View style={styles.flex}>
             
@@ -111,9 +130,10 @@ export function Content() {
 
             <View style={styles.right_section}>
               <View style={styles.number}>
-                <Text>{item.number}</Text>
+                <Text>0</Text>
               </View>  
-              {/* <Ionicons name="dots-three-vertical" size={24} color="#feed33" /> */}
+              {/* <Entypo name="dots-three-vertical" size={24} color="gray" /> */}
+              <PopupMenu color={"black"} options={dataMenu}/>
             </View>
           </View>
           
@@ -131,6 +151,11 @@ export function Content() {
     );
   }
 
+  const onButtonAdd = ()=> {
+    console.log("press")
+    setVisible(true)
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
 
@@ -143,14 +168,43 @@ export function Content() {
         contentContainerStyle={{  flexGrow: 1,  gap: 15 }}
         // columnWrapperStyle={{ gap: GAP_BETWEEN_COLUMNS }}
         ListEmptyComponent={() =>
-          <Text>
-            Список плейлистов пуст
-          </Text>
+          <View>
+            <MaterialIcons name="playlist-play" size={24} color="black" />
+            <Text>Список плейлистов пуст</Text>
+          </View>
+          
         }
-      />       
+      />   
+
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={onButtonAdd}
+      >
+        {/* <FontAwesome name="plus-circle" size={80} color="red" /> */}
+        <AntDesign name="pluscircle" size={70} color="red" />
+      </TouchableOpacity> 
+
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Title>Новый плейлист</Dialog.Title>
+          <Dialog.Content>
+            <TextInput
+              label="Название"
+              placeholder="Введите название"
+              value={playlistTitle}
+              onChangeText={text => setPlaylistTitle(text)}
+            />
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setVisible(false)}>Отмена</Button>
+            <Button onPress={() => setVisible(false)}>Добавить</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>   
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -211,7 +265,7 @@ const styles = StyleSheet.create({
 
       right_section: {
         display: 'flex',
-        justifyContent: 'end',
+        justifyContent: 'flex-end',
         alignItems: 'center',
         flex: 1,
         flexDirection: 'row'
@@ -227,5 +281,14 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 8,
-      }
+      },
+      floatingButton: {
+        position: 'absolute',
+        width: 150,
+        height: 150,
+        alignItems: 'center',
+        justifyContent: 'center',
+        bottom: 0,
+        right: 0,
+      },
 })
