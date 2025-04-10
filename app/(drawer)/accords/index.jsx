@@ -57,7 +57,6 @@ export function Content() {
 
     fetch()
 
-    setIsLoading(false);
   }, []);
 
   if (isLoading) {

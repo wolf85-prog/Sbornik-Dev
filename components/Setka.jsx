@@ -1,9 +1,25 @@
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import {Platform} from "react-native";
 import {Skia, Line, vec, useFonts, Paragraph, TextAlign, Circle} from "@shopify/react-native-skia";
 
 // Example from https://shopify.github.io/react-native-skia/docs/shapes/path/
-const Setka = () => {
+const Setka = ({data}) => {
+    const [code, setCode] = useState([]);
+
+    useEffect(() => {
+          console.log("code: ", data)
+          //console.log("lad: ", data.lad) 
+
+        let array = (""+data).split("").map(Number)
+        console.log(array);
+        setCode(array)
+    }, [data])
+
+    useEffect(() => {
+
+      console.log("code array: ", code);
+
+  }, [code])
 
     // const customFontMgr = useFonts({
     //     Poppins: [
@@ -39,32 +55,44 @@ const Setka = () => {
     //       .build();
     // }, []);
 
+    const line0 = 50;
+    const line2 = 150;
+    
+
+
     const lineStart = 50;
-    const lineEnd = 150;
+    const lineEnd = 250;
 
     const horizontalCenter = 50;
-    const horizontalCenter2 = 70;
-    const horizontalCenter3 = 90;
-    const horizontalCenter4 = 110;
-    const horizontalCenter5 = 130;
-    const horizontalCenter6 = 150;
+    const horizontalCenter2 = 90;
+    const horizontalCenter3 = 130;
+    const horizontalCenter4 = 170;
+    const horizontalCenter5 = 210;
+    const horizontalCenter6 = 250;
 
     
     const lineStart2 = 50;
-    const lineEnd2 = 150;
+    const lineEnd2 = 250;
 
     const verticalCenter = 50;
-    const verticalCenter2 = 70;
-    const verticalCenter3 = 90;
-    const verticalCenter4 = 110;
-    const verticalCenter5 = 130;
-    const verticalCenter6 = 150;
+    const verticalCenter2 = 90;
+    const verticalCenter3 = 130;
+    const verticalCenter4 = 170;
+    const verticalCenter5 = 210;
+    const verticalCenter6 = 250;
 
-    const r = 5;
+    const r = 10;
 
     return (
         <>
             {/* <Paragraph paragraph={paragraph} x={0} y={0} width={300} /> */}
+
+            {/* <Line
+                p1={vec(5, 0)}
+                p2={vec(50, 0)}
+                strokeWidth={4}
+                color={"black"}
+            /> */}
 
             {/* Горизонтальные линии */}
             <Line
@@ -152,11 +180,41 @@ const Setka = () => {
                 color={"black"}
             />
 
+            {/* струна 1 */}
+            {   code[0] !== 0 ?
+                <Circle cx={50} cy={30 + 40*code[0]} r={r} color="blue" />
+                : ''
+            }
 
-            <Circle cx={70} cy={80} r={r} color="blue" />
-            <Circle cx={90} cy={80} r={r} color="blue" />
+            {/* струна 2 */}
+            {   code[1] !== 0 ?
+                <Circle cx={90} cy={30 + 40*code[1]} r={r} color="blue" />
+                :''
+            }
+            
+            {/* струна 3, лад 3 */}
+            {   code[2] !== 0 ?
+                <Circle cx={130} cy={30 + 40*code[2]} r={r} color="blue" />
+                :''
+            }
+            
+            {/* струна 4, лад 4 */}
+            {   code[3] !== 0 ?
+                <Circle cx={170} cy={30 + 40*code[3]} r={r} color="blue" />
+                :''
+            }
 
-            <Circle cx={70} cy={100} r={r} color="blue" />
+            {/* струна 5, лад 5 */}
+            {   code[4] !== 0 ?
+                <Circle cx={210} cy={30 + 40*code[4]} r={r} color="blue" />
+                :''
+            }
+
+            {/* струна 6, лад 1 */}
+            {   code[5] !== 0 ?
+                <Circle cx={250} cy={30 + 40*code[5]} r={r} color="blue" />
+                :''
+            }
         </>
         
     );

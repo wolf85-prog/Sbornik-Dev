@@ -13,12 +13,12 @@ export default function CategoryAccordScreen() {
   const db = useSQLiteContext();
 
   const [title, setTitle] = useState('');
-    const { category } = useLocalSearchParams(); 
+  const { category } = useLocalSearchParams(); 
   
-    useEffect(() => {
-      console.log("id: ", category)
+  useEffect(() => {
+    console.log("id: ", category)
       
-    }, [category])
+  }, [category])
 
   const router = useRouter();
 
@@ -33,6 +33,13 @@ export default function CategoryAccordScreen() {
     const fetch = (async()=> {
 
       await db.withTransactionAsync(async () => {
+        const row = await db.getFirstAsync(`SELECT * FROM categories_accords WHERE _id=${category}`);
+        console.log("row: ", row)
+
+        setTitle(row.accord)
+      });
+
+      await db.withTransactionAsync(async () => {
         const allRows = await db.getAllAsync(`SELECT * FROM accord_new WHERE _id_cat_acc=${category}`);
         const accords = allRows.map((row) => ({
           uid: row?._id,
@@ -42,19 +49,15 @@ export default function CategoryAccordScreen() {
           lad: row?.lad,
         }));
 
-        console.log(accords)
-    
-        setTitle(accords[1].name)
-
         setAccords(accords);
 
         setIsLoading(false);
       });
+
     })
 
     fetch()
 
-    setIsLoading(false);
   }, []);
 
   if (isLoading) {
@@ -67,7 +70,7 @@ export default function CategoryAccordScreen() {
   
 
   const Item = ({item}) => (
-    <TouchableOpacity style={styles.item} onPress={()=> {router.push('/accords/next-page')}} >
+    <TouchableOpacity style={styles.item} onPress={()=> {router.push(`/accords/categoryAcc/accord/${item.uid}`)}} >
       <Text style={styles.title}>{item.name}</Text>
     </TouchableOpacity>
   );
@@ -78,9 +81,9 @@ export default function CategoryAccordScreen() {
       <View
         style={{
           height: 1,
-          width: "89%",
+          width: "95%",
           backgroundColor: "#CED0CE",
-          marginLeft: "5%",
+          marginLeft: "2%",
         }}
       />
     );
@@ -143,7 +146,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f3f3f3',
     width: '100%',
-    paddingHorizontal: 10,
+    paddingHorizontal: 0,
     paddingVertical: 20,
   },
 
