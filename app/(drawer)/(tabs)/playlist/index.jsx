@@ -113,7 +113,7 @@ export function Content() {
     setIsLoading(false);
   }, []);
 
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
 
   const hideDialog = () => setVisible(false);
   

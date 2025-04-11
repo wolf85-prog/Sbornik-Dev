@@ -3,6 +3,7 @@ import Card from '../../../../components/ui/Card';
 import { Stack, useRouter } from 'expo-router';
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons';
+import { Snackbar } from 'react-native-paper';
 
 //import * as SQLite from 'expo-sqlite';
 import React, { useContext } from 'react'
@@ -29,6 +30,8 @@ const loadDatabase = async()=> {
 
 export default function Index() {
   const {currentTheme} = useContext(ThemeContext)
+
+  
 
   const options = [
           {
@@ -80,6 +83,11 @@ export function Content() {
   const [fullData, setFullData] = useState([])
   const [textInputValue, setTextInputValue] = useState("");
   const [favorite, setFavorite] = useState([])
+
+  const [visible, setVisible] = React.useState(false);
+
+  const onToggleSnackBar = () => setVisible(!visible);
+  const onDismissSnackBar = () => setVisible(false);
 
   const handleSearch = (query) => {
     setSearchQuery(query)
@@ -135,6 +143,7 @@ export function Content() {
   }, []);
 
   const pressStar = (item, fav) => {
+    onToggleSnackBar()
     console.log("press: ", item.number)
     let arr = []
     arr[item.number-1] = !fav
@@ -200,6 +209,19 @@ export function Content() {
           contentContainerStyle={{ gap: 15 }}
           // columnWrapperStyle={{ gap: GAP_BETWEEN_COLUMNS }}
         /> 
+
+
+      <Snackbar
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: 'Undo',
+          onPress: () => {
+            // Do something
+          },
+        }}>
+        Hey there! I'm a Snackbar.
+      </Snackbar>
             
     </SafeAreaView>
   );

@@ -1,9 +1,11 @@
 import React, {useEffect, useRef, useState, useMemo, Fragment} from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { StatusBar, View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { StatusBar, View, StyleSheet, SafeAreaView, ActivityIndicator, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Ionicons, FontAwesome, Entypo, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { Stack } from "expo-router";
 import CardSong from '../../../../../components/ui/CardSong';
+import { Button, Dialog, Portal, TextInput, Text, Snackbar } from 'react-native-paper';
+import Slider from '@react-native-community/slider';
 
 import songsData from './../../../../../data/songsData.js';
 import { PAGES, createPage } from './../../../../../constants/utils';
@@ -63,6 +65,7 @@ const data = [
 },
 ]
 
+
 export default function DetailsScreen() {
 
   const db = useSQLiteContext();
@@ -73,12 +76,22 @@ export default function DetailsScreen() {
   const [songId, setSongId] = useState<any>('');
   const [songName, setSongName] = useState<any>('');
   const [songText, setSongText] = useState<any>('');
-
+  const [visibleNumber, setVisibleNumber] = useState(false);
+  const [songNumber, setSongNumber] = useState<any>('');
   const [separators, setSeparators] = useState<any>([])
+
+  const [visiblePlaylist, setVisiblePlaylist] = useState(false);
+
+  const [visibleFontSize, setVisibleFontSize] = useState(false);
+  const [textSize, setTextSize] = useState<any>(15);
 
   const sliderRef = useRef<PagerView>(null);
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
   const scrollOfset = useScrollViewOffset(scrollRef)
+
+  
+
+  const hideDialog = () => setVisibleNumber(false);
 
   const imageAnimatedStyle = useAnimatedStyle(()=> {
     return {
@@ -218,15 +231,16 @@ export default function DetailsScreen() {
 
             <TouchableOpacity
               // onPress={()=>router.push("/modal")}
-              style={{marginRight: 15}}
+              onPress={()=>setVisibleFontSize(true)}
+              style={{marginRight: 20}}
             >
               {/* <FontAwesome name="dots-three-vertical" size={28} color="white" /> */}
               <Entypo name="note" size={20} color="white" />
             </TouchableOpacity>
 
             <TouchableOpacity
-              // onPress={()=>router.push("/modal")}
-              style={{marginRight: 15}}
+              onPress={()=>setVisibleNumber(true)}
+              style={{marginRight: 20}}
             >
               {/* <FontAwesome name="dots-three-vertical" size={28} color="white" /> */}
               <Entypo name="dial-pad" size={20} color="white" />
@@ -234,13 +248,13 @@ export default function DetailsScreen() {
 
             <TouchableOpacity
               // onPress={()=>router.push("/modal")}
-              style={{marginRight: 15}}
+              style={{marginRight: 20}}
             >
               {/* <FontAwesome name="dots-three-vertical" size={28} color="white" /> */}
               <SimpleLineIcons name="size-fullscreen" size={20} color="white" />
             </TouchableOpacity>
 
-            <PopupMenu options={data}/>
+            <PopupMenu options={data} color={"white"}/>
           </>
           
         );
@@ -337,7 +351,7 @@ export default function DetailsScreen() {
                     <ScrollView style={styles.scrollStyle}>       
                       <CardSong>
                         <View style={[styles.slide] }>
-                          <AllText text={page.text}></AllText>
+                          {/* <AllText text={page.text}></AllText> */}
                           {/* <Text style={styles.text}>{page.text}</Text> */}
                         </View>
                       </CardSong>        
@@ -356,7 +370,58 @@ export default function DetailsScreen() {
           >
             <Ionicons name="heart-circle-outline" size={80} color="red" />
             {/* <Ionicons name="heart-circle-sharp" size={80} color="red" /> */}
-          </TouchableOpacity>   
+          </TouchableOpacity> 
+
+          <Dialog visible={visibleNumber} onDismiss={hideDialog}>
+              <Dialog.Content>
+                <Text variant="bodyMedium">Введите номер в данном сборнике, на который желаете перейти</Text>
+                      <TextInput
+                        label="Номер"
+                        placeholder="1-555"
+                        value={songNumber}
+                        onChangeText={text => setSongNumber(text)}
+                      />
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => setVisibleNumber(false)}>Отмена</Button>
+                <Button onPress={() => setVisibleNumber(false)}>ОК</Button>
+              </Dialog.Actions>
+          </Dialog>
+ 
+          <Dialog visible={visiblePlaylist} onDismiss={hideDialog}>
+              <Dialog.Title>Добавить в плейлист</Dialog.Title>
+              <Dialog.Content>
+                <Text>...</Text>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => setVisiblePlaylist(false)}>Отмена</Button>
+                <Button onPress={() => setVisiblePlaylist(false)}>ОК</Button>
+              </Dialog.Actions>
+          </Dialog>
+  
+          <Dialog visible={visibleFontSize} onDismiss={hideDialog}>
+              <Dialog.Title>Размер текста</Dialog.Title>
+              <Dialog.Content>
+                <View style={{alignItems: 'center'}}>
+                  <Text style={styles.text}>{textSize}</Text>
+                  <Slider
+                    style={{width: 200, height: 40}}
+                    minimumValue={10}
+                    maximumValue={30}
+                    step={0.5}
+                    //style={[styles.slider, props.style]}
+                    //{...props}
+                    value={15}
+                   //onValueChange={setValue}
+                  />
+                </View>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => setVisibleFontSize(false)}>Отмена</Button>
+                <Button onPress={() => setVisibleFontSize(false)}>ОК</Button>
+              </Dialog.Actions>
+          </Dialog>
+
         </SafeAreaView>
       </Provider>
     </View>
