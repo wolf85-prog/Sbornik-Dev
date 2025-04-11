@@ -24,6 +24,7 @@ import { DrawerToggleButton } from "@react-navigation/drawer";
 import { images } from "../../../constants";
 import { ThemeContext } from "./../../../context/ThemeContext.tsx"
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import { Divider } from 'react-native-paper';
 
 export default function AboutScreen() {
   const {currentTheme} = useContext(ThemeContext)
@@ -34,8 +35,9 @@ export default function AboutScreen() {
       <Stack.Screen options={{ 
           headerShown: true, 
           title: "О приложении", 
-          headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />), 
-          headerStyle: {backgroundColor: currentTheme === 'dark' ? Colors.dark : Colors.white}
+          headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />), 
+          headerStyle: {backgroundColor: currentTheme === 'dark' ? Colors.dark : '#26489a'},  
+          headerTintColor: 'white',
         }} />
         <Provider>
           <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../../../assets/sbornik.db') }}>
@@ -90,6 +92,7 @@ export function Content() {
                 borderBottomWidth: 1,
               }}
             /> */}
+            <Divider />
 
             <View style={{flex: 1}} />
 

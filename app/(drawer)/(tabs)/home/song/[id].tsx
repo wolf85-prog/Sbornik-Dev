@@ -5,7 +5,7 @@ import { Ionicons, FontAwesome, Entypo, MaterialCommunityIcons, SimpleLineIcons 
 import { Stack } from "expo-router";
 import CardSong from '../../../../../components/ui/CardSong';
 import { Button, Dialog, Portal, TextInput, Text, Snackbar } from 'react-native-paper';
-import Slider from '@react-native-community/slider';
+//import Slider from '@react-native-community/slider';
 
 import songsData from './../../../../../data/songsData.js';
 import { PAGES, createPage } from './../../../../../constants/utils';
@@ -404,16 +404,7 @@ export default function DetailsScreen() {
               <Dialog.Content>
                 <View style={{alignItems: 'center'}}>
                   <Text style={styles.text}>{textSize}</Text>
-                  <Slider
-                    style={{width: 200, height: 40}}
-                    minimumValue={10}
-                    maximumValue={30}
-                    step={0.5}
-                    //style={[styles.slider, props.style]}
-                    //{...props}
-                    value={15}
-                   //onValueChange={setValue}
-                  />
+
                 </View>
               </Dialog.Content>
               <Dialog.Actions>

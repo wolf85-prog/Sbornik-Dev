@@ -37,7 +37,15 @@ export default function SettingsScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ headerShown: true, title: "Настройки", headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) }} />
+      <Stack.Screen options={{ 
+        headerShown: true, 
+        title: "Настройки",  
+        headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />), 
+        headerStyle: {backgroundColor: currentTheme === 'dark' ? 'dark' : '#26489a'},  
+        headerTintColor: 'white',
+        }} 
+      />
+      
       <SafeAreaView style={[styles.container,{backgroundColor: currentTheme === 'dark' ? COLORS.dark : COLORS.light}]} >     
         <ScrollView>
 
