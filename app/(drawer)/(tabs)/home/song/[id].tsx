@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState, useMemo, Fragment} from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { StatusBar, View, StyleSheet, SafeAreaView, ActivityIndicator, Image, Dimensions, TouchableOpacity } from 'react-native';
-import { Ionicons, FontAwesome, Entypo, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome, Entypo, MaterialCommunityIcons, SimpleLineIcons, Fontisto } from '@expo/vector-icons';
 import { Stack } from "expo-router";
 import CardSong from '../../../../../components/ui/CardSong';
 import { Button, Dialog, Portal, TextInput, Text, Snackbar } from 'react-native-paper';
@@ -76,6 +76,10 @@ export default function DetailsScreen() {
   const [songId, setSongId] = useState<any>('');
   const [songName, setSongName] = useState<any>('');
   const [songText, setSongText] = useState<any>('');
+  const [songOnlyText, setSongOnlyText] = useState<any>('');
+
+  const [showSongText, setShowSongText] = useState(true);
+  
   const [visibleNumber, setVisibleNumber] = useState(false);
   const [songNumber, setSongNumber] = useState<any>('');
   const [separators, setSeparators] = useState<any>([])
@@ -143,6 +147,7 @@ export default function DetailsScreen() {
             name: row?.name,
             text: row?.song,
             number: row?.number,
+            onlytext: row?.song2,
           };
 
           //pages[Number(row?._id)-1] = song
@@ -221,6 +226,7 @@ export default function DetailsScreen() {
   interface Todo {
     name: string;
     song: string;
+    song2: string;
     _id: number;
     number: number;
   }
@@ -234,7 +240,6 @@ export default function DetailsScreen() {
               onPress={()=>setVisibleFontSize(true)}
               style={{marginRight: 20}}
             >
-              {/* <FontAwesome name="dots-three-vertical" size={28} color="white" /> */}
               <Entypo name="note" size={20} color="white" />
             </TouchableOpacity>
 
@@ -242,7 +247,6 @@ export default function DetailsScreen() {
               onPress={()=>setVisibleNumber(true)}
               style={{marginRight: 20}}
             >
-              {/* <FontAwesome name="dots-three-vertical" size={28} color="white" /> */}
               <Entypo name="dial-pad" size={20} color="white" />
             </TouchableOpacity>
 
@@ -250,7 +254,6 @@ export default function DetailsScreen() {
               // onPress={()=>router.push("/modal")}
               style={{marginRight: 20}}
             >
-              {/* <FontAwesome name="dots-three-vertical" size={28} color="white" /> */}
               <SimpleLineIcons name="size-fullscreen" size={20} color="white" />
             </TouchableOpacity>
 
@@ -264,10 +267,25 @@ export default function DetailsScreen() {
     console.log("press")
   }
 
+  const onChangeSong = ()=> {
+    console.log("change")
+    setShowSongText(!showSongText)
+    
+  }
+
   const Chord = (name: any) => {
     //console.log(name)
     return (
       <Text style={styles.chordName}>
+        {name}
+      </Text>
+    )
+  }
+
+  const Slova = (name: any) => {
+    //console.log(name)
+    return (
+      <Text>
         {name}
       </Text>
     )
@@ -284,7 +302,7 @@ export default function DetailsScreen() {
           
           return <Chord name={charOrSpace} />
         }
-        return charOrSpace;
+        return <Slova name={charOrSpace} />;
       });
   
       //console.log(rowArr)
@@ -293,12 +311,18 @@ export default function DetailsScreen() {
 
     return (
       <>
-        {parsedText.map((row: any) => (
-           //if (row) {
+        {parsedText.map((row: any) => 
+          {
+            if (row[1]) {
               //console.log(row[1])
-              <Text>{row[0]}</Text>
-           //}
-        ))}
+              (<View>{row[1]}</View>)
+            } 
+          else {
+            //console.log(row[0])
+            (<View>{row[0]}</View>)
+          }
+        }
+        )}
       </>
     )
   }
@@ -335,6 +359,14 @@ export default function DetailsScreen() {
               <Text style={[styles.title,]}>{songName}</Text>
             </View>
 
+            <View style={{position: 'absolute', top: 140, width: '100%', padding: 15}}>
+              <Text style={[styles.title, {fontSize: 16}]}>Без категории</Text>
+            </View>
+
+            <View style={{position: 'absolute', top: 220, left: -140, width: '100%', padding: 15}}>
+              <Text style={[styles.title, {fontSize: 34}]}>№ {title}</Text>
+            </View>
+
             <View style={{height: 1000}}>
               <PagerView
                 ref={sliderRef}
@@ -352,7 +384,7 @@ export default function DetailsScreen() {
                       <CardSong>
                         <View style={[styles.slide] }>
                           {/* <AllText text={page.text}></AllText> */}
-                          {/* <Text style={styles.text}>{page.text}</Text> */}
+                          <Text style={[styles.text, {fontSize: 18}]}>{showSongText ? page.text : page.onlytext}</Text>
                         </View>
                       </CardSong>        
                     </ScrollView>
@@ -362,13 +394,38 @@ export default function DetailsScreen() {
               </PagerView>
             </View>
 
-          </Animated.ScrollView>   
+          </Animated.ScrollView>  
 
+          {/* Убрать тон */}
+          <TouchableOpacity
+              style={styles.floatingButtonBemol}
+              onPress={onButtonPress}
+          >
+            <MaterialCommunityIcons name="music-accidental-flat" size={30} color="white" />
+          </TouchableOpacity> 
+
+          {/* Убрать аккорды */}
+          <TouchableOpacity
+              style={styles.floatingButtonNote}
+              onPress={onChangeSong}
+          >
+            <Entypo name="note" size={30} color="white" />
+          </TouchableOpacity> 
+
+          {/* Добавить тон */}
+          <TouchableOpacity
+              style={styles.floatingButtonDiez}
+              onPress={onButtonPress}
+          >
+            <Fontisto name="hashtag" size={20} color="white" />
+          </TouchableOpacity>
+
+          {/* Добавить в  избранное */}
           <TouchableOpacity
               style={styles.floatingButton}
               onPress={onButtonPress}
           >
-            <Ionicons name="heart-circle-outline" size={80} color="red" />
+            <Ionicons name="heart-circle-outline" size={60} color="#DE3163" />
             {/* <Ionicons name="heart-circle-sharp" size={80} color="red" /> */}
           </TouchableOpacity> 
 
@@ -462,12 +519,48 @@ const styles = StyleSheet.create({
   },
   floatingButton: {
     position: 'absolute',
-    width: 150,
-    height: 150,
+    width: 100,
+    height: 100,
     alignItems: 'center',
     justifyContent: 'center',
     bottom: 0,
     right: 0,
+  },
+
+  floatingButtonNote: {
+    backgroundColor:'#DE3163',
+    borderRadius:'50%',
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: 270,
+    right: 90,
+  },
+
+  floatingButtonBemol: {
+    backgroundColor:'#DE3163',
+    borderRadius:'50%',
+    position: 'absolute',
+    width: 45,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: 280,
+    right: 170,
+  },
+
+  floatingButtonDiez: {
+    backgroundColor:'#DE3163',
+    borderRadius:'50%',
+    position: 'absolute',
+    width: 45,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: 280,
+    right: 20,
   },
 
   chordName: {

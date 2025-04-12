@@ -3,8 +3,10 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react'
 import { useEffect, useState } from "react";
 import { DrawerToggleButton } from "@react-navigation/drawer";
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Ionicons, FontAwesome, Entypo, AntDesign, MaterialIcons } from '@expo/vector-icons';
 import Card from '../../../../components/ui/Card';
+import PopupMenu from "../../../../components/ui/PopupMenu.js";
+import { Button, Menu, Divider, PaperProvider } from 'react-native-paper';
 //import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import {
   Provider,
@@ -14,25 +16,32 @@ import filter from "lodash.filter"
 
 const NotesScreen = () => {
 
+  const router = useRouter();
+
+  const data = [
+      {
+        title: "Настройки",
+        action: ()=>router.push("/settings")
+      },
+  ]
+  
   const headerRight = () => {
-        return (
-          <TouchableOpacity
-            // onPress={()=>router.push("/modal")}
-            style={{marginRight: 10}}
-          >
-            <FontAwesome name="plus-circle" size={28} color="blue" />
-          </TouchableOpacity>
-        );
+    return (
+        <PopupMenu options={data} color={"white"}/>
+    );
   };
 
   return (
 
     <View style={styles.container}>
+      {/* Header */}
       <Stack.Screen options={{ 
         headerShown: true, 
         title: "Заметки", 
         headerRight: headerRight,
-        headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) 
+        headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
+        headerStyle: {backgroundColor: '#26489a'},    
+        headerTintColor: 'white',
       }} />
       <Provider>
           <Content />
@@ -55,6 +64,12 @@ export function Content() {
   const [fullData, setFullData] = useState([])
   const [textInputValue, setTextInputValue] = useState("");
 
+  const [visible, setVisible] = React.useState(false);
+
+  const openMenu = () => setVisible(true);
+
+  const closeMenu = () => setVisible(false);
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -74,12 +89,11 @@ export function Content() {
     
       //   setNotes(sortedSongs);
 
-      //   setIsLoading(false);
+         setIsLoading(false);
       // });
     })
 
     fetch()
-    setIsLoading(false);
   }, []);
   
   function Item({ item }) {
@@ -107,6 +121,21 @@ export function Content() {
     );
   }
 
+  const EmptyListMessage = ({item}) => {
+    return (
+          // Flat List Item
+          <View style={styles.containerList}>
+            <MaterialIcons name="event-note" size={72} color="#7f8c8d" style={{textAlign: 'center'}}/>
+            <Text style={styles.emptyListTitle}>
+              Список заметок пуст
+            </Text>
+            <Text style={styles.emptyList}>
+              Добавьте заметку при просмотре песни
+            </Text>
+          </View>  
+    );
+  };
+
   if (isLoading) {
     return (
       <View style={{flex:1, justifyContent:'center',alignItems:'center'}}>
@@ -126,11 +155,7 @@ export function Content() {
         // ItemSeparatorComponent={() => <View style={{height: 15}} />}
         contentContainerStyle={{  flexGrow: 1, justifyContent: "center", alignItems: "center", gap: 15 }}
         // columnWrapperStyle={{ gap: GAP_BETWEEN_COLUMNS }}
-        ListEmptyComponent={() =>
-          <Text style={styles.emptyList}>
-            Список заметок пуст
-          </Text>
-        }
+        ListEmptyComponent={EmptyListMessage}
       />       
     </SafeAreaView>
   );
@@ -143,12 +168,29 @@ const styles = StyleSheet.create({
         width: '100%',
       },
 
-      emptyList: {
-        fontSize: 16,
+      containerList: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#d6d5d5',
+        width: '100%',
+        margin: 0
       },
 
+      emptyListTitle: {
+        color: '#7f8c8d',
+        textAlign: 'center',
+        fontSize: 22,
+      },
+    
+      emptyList: {
+        color: '#b2babb',
+        textAlign: 'center',
+        fontSize: 16,
+      },
+    
       listSongs:{
-        padding: 15,
+        padding: 0,
       },
 
       card: {

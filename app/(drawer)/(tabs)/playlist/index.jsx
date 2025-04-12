@@ -15,25 +15,32 @@ import PopupMenu from "./../../../../components/ui/PopupMenu.js";
 
 const PlaylistScreen = () => {
 
+  const router = useRouter();
+
+  const data = [
+      {
+        title: "Настройки",
+        action: ()=>router.push("/settings")
+      },
+  ]
+  
   const headerRight = () => {
-      return (
-        <TouchableOpacity
-          // onPress={()=>router.push("/modal")}
-          style={{marginRight: 10}}
-        >
-          <FontAwesome name="plus-circle" size={28} color="blue" />
-        </TouchableOpacity>
-      );
-    };
+    return (
+        <PopupMenu options={data} color={"white"}/>
+    );
+  };
 
   return (
 
     <View style={styles.container}>
+      {/* Header */}
       <Stack.Screen options={{ 
         headerShown: true, 
         title: "Плейлисты", 
         headerRight: headerRight,
-        headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) 
+        headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
+        headerStyle: {backgroundColor: '#26489a'},    
+        headerTintColor: 'white',
       }} />
       <Provider>
           <Content />

@@ -31,18 +31,18 @@ const loadDatabase = async()=> {
 export default function Index() {
   const {currentTheme} = useContext(ThemeContext)
 
-  
+  const router = useRouter();
 
   const options = [
           {
               title: "Настройки",
-              action: ()=>alert('dffdf')
+              action: ()=>router.push("/settings")
           },
       ]
 
   const headerRight = () => {
     return (
-      <PopupMenu options={options} />
+      <PopupMenu options={options} color={"white"} />
     );
   };
 

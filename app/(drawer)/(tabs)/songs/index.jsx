@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Ionicons } from '@expo/vector-icons';
 import Card from '../../../../components/ui/Card';
+import PopupMenu from "../../../../components/ui/PopupMenu.js";
 //import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import {
   Provider,
@@ -16,10 +17,35 @@ import songsData from './../../../../data/songsData.js';
 
 const SongsScreen = () => {
 
+  const router = useRouter();
+
+  const options = [
+    {
+      title: "Настройки",
+      action: ()=>router.push("/settings")
+    },
+  ]
+  
+  const headerRight = () => {
+    return (
+      <PopupMenu options={options} color={"white"} />
+    );
+  };
+
   return (
 
     <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: "Песни", headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) }} />
+      <Stack.Screen options={{ 
+        headerShown: true, 
+        title: "Песни", 
+        // headerLeft: (() => <DrawerToggleButton tintColor={'#000'} />) 
+        headerRight: headerRight,
+        headerLeft: (() => <DrawerToggleButton tintColor={'#fff'} />),
+        headerStyle: {backgroundColor: '#26489a'},    
+        headerTintColor: 'white',
+                //headerTitleStyle: {fontWeight: 400},
+        }} 
+      />
       <Provider>
         {/* <SQLiteProvider databaseName="sbornik.db" assetSource={{ assetId: require('./../../../../assets/sbornik.db') }}> */}
           <Content />

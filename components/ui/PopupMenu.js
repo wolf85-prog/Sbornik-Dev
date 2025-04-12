@@ -2,7 +2,7 @@ import { Modal, SafeAreaView, TouchableOpacity, View, Text, StyleSheet, Animated
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons';
 import React, { useRef, useState } from "react";
 
-const PopupMenu = (options, color) => {
+const PopupMenu = (options) => {
     const [visible, setVisible] = useState(false)
     const scale = useRef(new Animated.Value(0)).current
     function resizeBox(to) {
@@ -21,7 +21,7 @@ const PopupMenu = (options, color) => {
                 onPress={()=>resizeBox(1)}
                 style={{marginRight: 10}}
             >
-                <Entypo name="dots-three-vertical" size={22} color={color} />
+                <Entypo name="dots-three-vertical" size={22} color={options.color} />
             </TouchableOpacity>
 
             <Modal transparent visible={visible}>
@@ -39,7 +39,7 @@ const PopupMenu = (options, color) => {
                         // }
                         ]}>
                         {options.options.map((op, i)=> (
-                            <TouchableOpacity style={[styles.option]} key={i} onPress={()=>op.action}>
+                            <TouchableOpacity style={[styles.option]} key={i} onPress={op.action}>
                                 <Text style={styles.text}>{op.title}</Text>
                                 {/* <Icon name="" size="" color="" /> */}
                             </TouchableOpacity>
