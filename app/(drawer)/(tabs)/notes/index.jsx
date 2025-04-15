@@ -144,6 +144,11 @@ export function Content() {
     );
   }
 
+  const onButtonAdd = ()=> {
+    console.log("press")
+    setVisible(true)
+  }
+
   return (
     <SafeAreaView style={{flex:1}}>
 
@@ -156,7 +161,14 @@ export function Content() {
         contentContainerStyle={{  flexGrow: 1, justifyContent: "center", alignItems: "center", gap: 15 }}
         // columnWrapperStyle={{ gap: GAP_BETWEEN_COLUMNS }}
         ListEmptyComponent={EmptyListMessage}
-      />       
+      />  
+
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={onButtonAdd}
+      >
+        <AntDesign name="pluscircle" size={70} color="#DE3163" />
+      </TouchableOpacity>      
     </SafeAreaView>
   );
 }
@@ -252,5 +264,15 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 8,
-      }
+      },
+
+      floatingButton: {
+        position: 'absolute',
+        width: 150,
+        height: 150,
+        alignItems: 'center',
+        justifyContent: 'center',
+        bottom: 0,
+        right: 0,
+      },
 })

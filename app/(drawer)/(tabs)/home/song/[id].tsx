@@ -299,10 +299,10 @@ export default function DetailsScreen() {
     const parsedText = text.split("\n").map((row: any) => {
       const rowArr = row.split(chordRegex).map((charOrSpace: any) => {
         if (chordRegex.test(charOrSpace)) {
-          
-          return <Chord name={charOrSpace} />
+          //console.log({text: charOrSpace, color: 'blue'} )
+          return {text: charOrSpace, color: 'blue'} 
         }
-        return <Slova name={charOrSpace} />;
+        return {text: charOrSpace, color: ''} ;
       });
   
       //console.log(rowArr)
@@ -310,20 +310,18 @@ export default function DetailsScreen() {
     });
 
     return (
-      <>
-        {parsedText.map((row: any) => 
-          {
-            if (row[1]) {
-              //console.log(row[1])
-              (<View>{row[1]}</View>)
-            } 
-          else {
-            //console.log(row[0])
-            (<View>{row[0]}</View>)
-          }
-        }
+      <View>
+        {parsedText.map((row: any) => (  
+          <Text style={{color: `${row[1]?.color}`}}>
+            {row.map((item: any)=> (
+              
+                item ? item.text : ''
+              
+            ))}
+          </Text>
+         )
         )}
-      </>
+      </View>
     )
   }
 
@@ -367,6 +365,30 @@ export default function DetailsScreen() {
               <Text style={[styles.title, {fontSize: 34}]}>№ {title}</Text>
             </View>
 
+            {/* Убрать тон */}
+            <TouchableOpacity
+                style={styles.floatingButtonBemol}
+                onPress={onButtonPress}
+            >
+              <MaterialCommunityIcons name="music-accidental-flat" size={30} color="white" />
+            </TouchableOpacity> 
+
+            {/* Убрать аккорды */}
+            <TouchableOpacity
+                style={styles.floatingButtonNote}
+                onPress={onChangeSong}
+            >
+              <Entypo name="note" size={30} color="white" />
+            </TouchableOpacity> 
+
+            {/* Добавить тон */}
+            <TouchableOpacity
+                style={styles.floatingButtonDiez}
+                onPress={onButtonPress}
+            >
+              <Fontisto name="hashtag" size={20} color="white" />
+            </TouchableOpacity>
+
             <View style={{height: 1000}}>
               <PagerView
                 ref={sliderRef}
@@ -383,8 +405,8 @@ export default function DetailsScreen() {
                     <ScrollView style={styles.scrollStyle}>       
                       <CardSong>
                         <View style={[styles.slide] }>
-                          {/* <AllText text={page.text}></AllText> */}
-                          <Text style={[styles.text, {fontSize: 18}]}>{showSongText ? page.text : page.onlytext}</Text>
+                          <AllText text={page.text}></AllText>
+                          {/* <Text style={[styles.text, {fontSize: 18}]}>{showSongText ? page.text : page.onlytext}</Text> */}
                         </View>
                       </CardSong>        
                     </ScrollView>
@@ -396,29 +418,7 @@ export default function DetailsScreen() {
 
           </Animated.ScrollView>  
 
-          {/* Убрать тон */}
-          <TouchableOpacity
-              style={styles.floatingButtonBemol}
-              onPress={onButtonPress}
-          >
-            <MaterialCommunityIcons name="music-accidental-flat" size={30} color="white" />
-          </TouchableOpacity> 
-
-          {/* Убрать аккорды */}
-          <TouchableOpacity
-              style={styles.floatingButtonNote}
-              onPress={onChangeSong}
-          >
-            <Entypo name="note" size={30} color="white" />
-          </TouchableOpacity> 
-
-          {/* Добавить тон */}
-          <TouchableOpacity
-              style={styles.floatingButtonDiez}
-              onPress={onButtonPress}
-          >
-            <Fontisto name="hashtag" size={20} color="white" />
-          </TouchableOpacity>
+          
 
           {/* Добавить в  избранное */}
           <TouchableOpacity
@@ -537,6 +537,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     top: 270,
     right: 90,
+    zIndex: 100,
   },
 
   floatingButtonBemol: {
@@ -549,6 +550,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     top: 280,
     right: 170,
+    zIndex: 100,
   },
 
   floatingButtonDiez: {
@@ -561,6 +563,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     top: 280,
     right: 20,
+    zIndex: 100,
   },
 
   chordName: {

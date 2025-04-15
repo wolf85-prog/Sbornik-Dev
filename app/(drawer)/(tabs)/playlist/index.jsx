@@ -17,6 +17,10 @@ const PlaylistScreen = () => {
 
   const router = useRouter();
 
+  const [visiblePlaylist, setVisiblePlaylist] = useState(false);
+
+  const hideDialog = () => setVisible(false);
+
   const data = [
       {
         title: "Настройки",
@@ -26,7 +30,25 @@ const PlaylistScreen = () => {
   
   const headerRight = () => {
     return (
+      <>
+        <TouchableOpacity
+          // onPress={()=>router.push("/modal")}
+          onPress={()=>setVisibleFontSize(true)}
+          style={{marginRight: 20}}
+        >
+          <AntDesign name="search1" size={22} color="white" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          // onPress={()=>router.push("/modal")}
+          onPress={()=>setVisiblePlaylist(true)}
+          style={{marginRight: 20}}
+        >
+          <AntDesign name="delete" size={22} color="white" />
+        </TouchableOpacity>
+
         <PopupMenu options={data} color={"white"}/>
+      </>
     );
   };
 
@@ -44,6 +66,18 @@ const PlaylistScreen = () => {
       }} />
       <Provider>
           <Content />
+
+          <Dialog visible={visiblePlaylist} onDismiss={hideDialog}>
+            <Dialog.Title>Удаление</Dialog.Title>
+            <Dialog.Content>
+              <Text>Вы хотите очистить список?</Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => setVisiblePlaylist(false)}>Отмена</Button>
+              <Button onPress={() => setVisiblePlaylist(false)}>ОК</Button>
+            </Dialog.Actions>
+        </Dialog>
+
       </Provider>
     </View>
   )
@@ -65,6 +99,7 @@ export function Content() {
   const [textInputValue, setTextInputValue] = useState("");
   const [playlistTitle, setPlaylistTitle] = useState("");
 
+  
   const dataMenu = [
     {
       title: "Редактировать",
@@ -72,26 +107,14 @@ export function Content() {
     },
     {
         title: "Удалить",
-        action: ()=>alert('dffdf')
+        action: ()=>{
+          console.log("удаление...")
+          playlists.filter(item=> item.id === '5')
+        }
     },
   ]
 
-  const handleSearch = (query) => {
-    setSearchQuery(query)
-    const formattedQuery = query.toLowerCase()
-    const filteredData = filter(fullData, (user)=> {
-      return contains(user, formattedQuery)
-    })
-    setData(filteredData)
-  }
   
-  const contains = ({name, email}, query) => {
-    if (name.includes(query) || email.includes(query)) {
-      return true
-    }
-  
-    return false
-  }
 
   useEffect(() => {
     setIsLoading(true);
@@ -109,7 +132,7 @@ export function Content() {
           return (songA < songB) ? -1 : (songA > songB) ? 1 : 0;  //сортировка по возрастанию 
         })
     
-        setPlaylists(sortedSongs);
+        setPlaylists([]);
 
         setIsLoading(false);
       });
@@ -140,7 +163,7 @@ export function Content() {
                 <Text>0</Text>
               </View>  
               {/* <Entypo name="dots-three-vertical" size={24} color="gray" /> */}
-              <PopupMenu color={"black"} options={dataMenu}/>
+              <PopupMenu color={"black"} options={dataMenu} id={item.uid}/>
             </View>
           </View>
           
@@ -149,6 +172,22 @@ export function Content() {
       
     );
   }
+
+
+  const EmptyListMessage = ({item}) => {
+      return (
+            // Flat List Item
+            <View style={styles.containerList}>
+              <MaterialIcons name="playlist-play" size={72} color="#7f8c8d" style={{textAlign: 'center'}}/>
+              <Text style={styles.emptyListTitle}>
+                Список плейлистов пуст
+              </Text>
+              <Text style={styles.emptyList}>
+                Добавьте новый плейлист
+              </Text>
+            </View>  
+      );
+  };
 
   if (isLoading) {
     return (
@@ -174,21 +213,14 @@ export function Content() {
         // ItemSeparatorComponent={() => <View style={{height: 15}} />}
         contentContainerStyle={{  flexGrow: 1,  gap: 15 }}
         // columnWrapperStyle={{ gap: GAP_BETWEEN_COLUMNS }}
-        ListEmptyComponent={() =>
-          <View>
-            <MaterialIcons name="playlist-play" size={24} color="black" />
-            <Text>Список плейлистов пуст</Text>
-          </View>
-          
-        }
+        ListEmptyComponent={EmptyListMessage}
       />   
 
       <TouchableOpacity
         style={styles.floatingButton}
         onPress={onButtonAdd}
       >
-        {/* <FontAwesome name="plus-circle" size={80} color="red" /> */}
-        <AntDesign name="pluscircle" size={70} color="red" />
+        <AntDesign name="pluscircle" size={70} color="#DE3163" />
       </TouchableOpacity> 
 
       <Portal>
@@ -207,6 +239,8 @@ export function Content() {
             <Button onPress={() => setVisible(false)}>Добавить</Button>
           </Dialog.Actions>
         </Dialog>
+
+        
       </Portal>   
     </SafeAreaView>
   );
@@ -220,12 +254,29 @@ const styles = StyleSheet.create({
         width: '100%',
       },
 
+      containerList: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#d6d5d5',
+        width: '100%',
+        margin: 0
+      },
+
+      emptyListTitle: {
+        color: '#7f8c8d',
+        textAlign: 'center',
+        fontSize: 22,
+      },
+
       emptyList: {
+        color: '#b2babb',
+        textAlign: 'center',
         fontSize: 16,
       },
 
       listSongs:{
-        padding: 15,
+        padding: 0,
         flex: 1,
       },
 
