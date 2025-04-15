@@ -65,6 +65,8 @@ const styles = StyleSheet.create({
       justifyContent: "center",
     },
     skia: {
+      // flex:  1,
+      // alignItems: "center",
       width: 300,
       height: 300
   },

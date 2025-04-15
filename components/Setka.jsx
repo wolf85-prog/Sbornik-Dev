@@ -1,6 +1,7 @@
 import { useMemo, useEffect, useState } from "react";
 import {Platform} from "react-native";
-import {Skia, Line, vec, useFonts, Paragraph, TextAlign, Circle} from "@shopify/react-native-skia";
+import {Skia, Line, vec, useFonts, Paragraph, TextAlign, Circle, FontWeight, Glyphs, useFont} from "@shopify/react-native-skia";
+
 
 // Example from https://shopify.github.io/react-native-skia/docs/shapes/path/
 const Setka = ({data}) => {
@@ -16,49 +17,64 @@ const Setka = ({data}) => {
     }, [data])
 
     useEffect(() => {
-
       console.log("code array: ", code);
+    }, [code])
 
-  }, [code])
-
-    // const customFontMgr = useFonts({
-    //     Poppins: [
-    //       require("./../assets/fonts/Poppins-Bold.ttf")
-    //     ],
-    //     Noto: [require("./../assets/fonts/SpaceMono-Regular.ttf")],
-    //   });
+    const customFontMgr = useFonts({
+        Poppins: [
+          require("./../assets/fonts/Poppins-Bold.ttf")
+        ],
+        Noto: [require("./../assets/fonts/SpaceMono-Regular.ttf")],
+    });
       
-    // const paragraph = Skia.ParagraphBuilder.Make()
-    //     .addText("Hello Skia")
-    //     .build();
+
+    const paragraph = useMemo(() => {
+        // Are the font loaded already?
+        if (!customFontMgr) {
+            return null;
+        }
+
+        const paragraphStyle = {
+          textAlign: TextAlign.Center
+        };
+
+        const textStyle = {
+          color: Skia.Color("black"),
+          //fontFamilies: ["Poppins"],
+          fontSize: 22,
+        };
+        return Skia.ParagraphBuilder.Make(paragraphStyle, customFontMgr)
+          .pushStyle({ ...textStyle, fontStyle: { weight: 700 } })
+          .addText("E     A     D     G     H     E\n")
+          .addText(code[0].toString() +"     "+ code[1].toString() +"     "+ code[2].toString() +"     "+ code[3].toString() +"     "+ code[4].toString() +"     "+ code[5].toString())
+          .pop()
+          .build();
+    }, [customFontMgr]);
+
+    const paragraph2 = useMemo(() => {
+        // Are the font loaded already?
+        if (!customFontMgr) {
+            return null;
+        }
+
+        const paragraphStyle = {
+          textAlign: TextAlign.Center
+        };
+
+        const textStyle = {
+          color: Skia.Color("black"),
+          //fontFamilies: ["Poppins"],
+          fontSize: 32,
+        };
+        return Skia.ParagraphBuilder.Make(paragraphStyle, customFontMgr)
+          .pushStyle({ ...textStyle, fontStyle: { weight: 500 } })
+          .addText("   I\n   II\n   III\n   IV\n   V\n")
+          .pop()
+          .build();
+    }, [customFontMgr]);
 
 
-    // const paragraph = useMemo(() => {
-    //     // Are the font loaded already?
-    //     // Are the font loaded already?
-    //     // if (!SpaceMono) {
-    //     //     return null;
-    //     // }
-
-    //     const paragraphStyle = {
-    //       textAlign: TextAlign.Center
-    //     };
-    //     const textStyle = {
-    //       color: Skia.Color("black"),
-    //       //fontFamilies: ["Poppins"],
-    //       fontSize: 50,
-    //     };
-    //     return Skia.ParagraphBuilder.Make(paragraphStyle)
-    //       .pushStyle(textStyle)
-    //       .addText("Say Hello to ")
-    //       .pop()
-    //       .build();
-    // }, []);
-
-    const line0 = 50;
-    const line2 = 150;
-    
-
+    //-----------------------------------------------------------------------
 
     const lineStart = 50;
     const lineEnd = 250;
@@ -85,14 +101,10 @@ const Setka = ({data}) => {
 
     return (
         <>
-            {/* <Paragraph paragraph={paragraph} x={0} y={0} width={300} /> */}
+            <Paragraph paragraph={paragraph} x={0} y={0} width={300} />
 
-            {/* <Line
-                p1={vec(5, 0)}
-                p2={vec(50, 0)}
-                strokeWidth={4}
-                color={"black"}
-            /> */}
+            <Paragraph paragraph={paragraph2} x={-145} y={55} width={300} />
+            
 
             {/* Горизонтальные линии */}
             <Line
