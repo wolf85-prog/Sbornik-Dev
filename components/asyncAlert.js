@@ -3,8 +3,8 @@ import {Alert} from 'react-native';
 export default function asyncAlert({
   title,
   message,
-  cancelText = 'Cancel',
-  okText = 'OK',
+  cancelText = 'Отмена',
+  okText = 'Да',
   onPress
 })  {
   return new Promise(resolve => {

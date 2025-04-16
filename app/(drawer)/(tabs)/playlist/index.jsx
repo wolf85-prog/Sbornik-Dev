@@ -7,7 +7,8 @@ import { Ionicons, FontAwesome, AntDesign, Entypo, MaterialIcons } from '@expo/v
 import Card from '../../../../components/ui/Card';
 import { useSQLiteContext } from "expo-sqlite";
 import {Provider} from "react-native-paper";
-import { Button, Dialog, Portal } from 'react-native-paper';
+import { Button, Dialog, Portal, IconButton } from 'react-native-paper';
+import asyncAlert from "./../../../../components/asyncAlert.js";
 
 import filter from "lodash.filter"
 import PopupMenu from "./../../../../components/ui/PopupMenu.js";
@@ -99,6 +100,10 @@ export function Content() {
   const [textInputValue, setTextInputValue] = useState("");
   const [playlistTitle, setPlaylistTitle] = useState("");
 
+  const [dialog, setDialog] = useState({
+      customer: {},
+      isVisible: false,
+    });
   
   const dataMenu = [
     {
@@ -109,7 +114,8 @@ export function Content() {
         title: "Удалить",
         action: ()=>{
           console.log("удаление...")
-          playlists.filter(item=> item.id === '5')
+          deleteCustomer()
+          //playlists.filter(item=> item.id === '5')
         }
     },
   ]
@@ -145,7 +151,61 @@ export function Content() {
 
   const [visible, setVisible] = useState(false);
 
-  const hideDialog = () => setVisible(false);
+  const showDialog = (customer) =>
+    setDialog({
+      isVisible: true,
+      customer,
+    });
+
+  // const hideDialog = () => setVisible(false);
+
+  const hideDialog = async (updatedCustomer) => {
+    setDialog({
+      isVisible: false,
+      customer: {},
+    });
+
+    // Update the local state
+    const newCustomers = playlists.map((customer) => {
+      if (customer.uid !== updatedCustomer.uid) {
+        return customer;
+      }
+
+      return updatedCustomer;
+    });
+
+    setPlaylists(newCustomers);
+
+    // await db.withTransactionAsync(async () => {
+    //   await db.execAsync(
+    //     `UPDATE playlists SET uid=?, name=? WHERE uid=${updatedCustomer.uid}`, 
+    //     [updatedCustomer.uid, updatedCustomer.name]
+    //   );
+    // })
+  };
+
+  // Function to delete a customer
+  const deleteCustomer = async (customer) => {
+      // Show confirmation alert
+      // Magpakita ng confirmation alert
+      const shouldDelete = await asyncAlert({
+        title: "Удаление плейлиста",
+        message: `Вы точно хотите удалить плейлист "${customer.name}"?`,
+      });
+      if (!shouldDelete) {
+        return;
+      }
+  
+      // Update the local state
+      const newCustomers = playlists.filter((c) => c.uid !== customer.uid);
+      setPlaylists(newCustomers);
+  
+      // Delete customer from the database
+      // await db.withTransactionAsync(async () => {
+      //   await db.execAsync("DELETE FROM playlists WHERE uid = ?", [customer.uid]);
+      // })
+  };
+
   
   function Item({ item }) {
     return (
@@ -161,7 +221,12 @@ export function Content() {
             <View style={styles.right_section}>
               <View style={styles.number}>
                 <Text>0</Text>
-              </View>  
+              </View> 
+              <IconButton
+                icon="delete"
+                size={24}
+                onPress={() => deleteCustomer(item)}
+              /> 
               {/* <Entypo name="dots-three-vertical" size={24} color="gray" /> */}
               <PopupMenu color={"black"} options={dataMenu} id={item.uid}/>
             </View>
@@ -199,7 +264,8 @@ export function Content() {
 
   const onButtonAdd = ()=> {
     console.log("press")
-    setVisible(true)
+    showDialog()
+    
   }
 
   return (
@@ -224,7 +290,7 @@ export function Content() {
       </TouchableOpacity> 
 
       <Portal>
-        <Dialog visible={visible} onDismiss={hideDialog}>
+        <Dialog visible={dialog.isVisible} onDismiss={() => hideDialog(dialog.customer)}>
           <Dialog.Title>Новый плейлист</Dialog.Title>
           <Dialog.Content>
             <TextInput
@@ -235,8 +301,29 @@ export function Content() {
             />
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setVisible(false)}>Отмена</Button>
-            <Button onPress={() => setVisible(false)}>Добавить</Button>
+            <Button onPress={() => hideDialog(dialog.customer)}>Отмена</Button>
+            <Button 
+              onPress={() => {
+                const newValue = {
+                  uid: Date.now().toString(),
+                  name: textInputValue,
+                };
+                setPlaylists([...playlists, newValue]);
+                setDialog({
+                  isVisible: false,
+                  customer: {},
+                });
+                // Insert new customer into the database
+                // I-insert ang bagong customer sa database
+                // db.transaction((tx) => {
+                //   tx.executeSql(
+                //     "insert into customers (uid, name) values(?, ?)",
+                //     [newValue.uid, newValue.name]
+                //   );
+                // });
+              }}
+            >Добавить
+            </Button>
           </Dialog.Actions>
         </Dialog>
 

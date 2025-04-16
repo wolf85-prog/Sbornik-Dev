@@ -1,10 +1,10 @@
 import React, {useEffect, useRef, useState, useMemo, Fragment} from 'react';
-import { useLocalSearchParams } from 'expo-router';
-import { StatusBar, View, StyleSheet, SafeAreaView, ActivityIndicator, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { StatusBar, View, StyleSheet, SafeAreaView, ActivityIndicator, Image, Dimensions, TouchableOpacity, Text } from 'react-native';
 import { Ionicons, FontAwesome, Entypo, MaterialCommunityIcons, SimpleLineIcons, Fontisto } from '@expo/vector-icons';
 import { Stack } from "expo-router";
 import CardSong from '../../../../../components/ui/CardSong';
-import { Button, Dialog, Portal, TextInput, Text, Snackbar } from 'react-native-paper';
+import { Button, Dialog, Portal, TextInput,  Snackbar } from 'react-native-paper';
 //import Slider from '@react-native-community/slider';
 
 import songsData from './../../../../../data/songsData.js';
@@ -69,6 +69,8 @@ const data = [
 export default function DetailsScreen() {
 
   const db = useSQLiteContext();
+
+  const router = useRouter();
   
   const [songs, setSongs] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -300,9 +302,9 @@ export default function DetailsScreen() {
       const rowArr = row.split(chordRegex).map((charOrSpace: any) => {
         if (chordRegex.test(charOrSpace)) {
           //console.log({text: charOrSpace, color: 'blue'} )
-          return {text: charOrSpace, color: 'blue'} 
+          return {text: charOrSpace.trim(), color: 'blue', id: '1'} 
         }
-        return {text: charOrSpace, color: ''} ;
+        return {text: charOrSpace, color: '', id: ''} ;
       });
   
       //console.log(rowArr)
@@ -315,8 +317,8 @@ export default function DetailsScreen() {
           <Text style={{color: `${row[1]?.color}`}}>
             {row.map((item: any)=> (
               
-                item ? item.text : ''
-              
+              item?.id ? <Text onPress={()=>router.push(`/accords/categoryAcc/accord/${item?.id}`)}>{item ? item.text : ''}</Text>
+                : <Text>{item ? item.text : ''}</Text>
             ))}
           </Text>
          )
@@ -431,7 +433,7 @@ export default function DetailsScreen() {
 
           <Dialog visible={visibleNumber} onDismiss={hideDialog}>
               <Dialog.Content>
-                <Text variant="bodyMedium">Введите номер в данном сборнике, на который желаете перейти</Text>
+                <Text>Введите номер в данном сборнике, на который желаете перейти</Text>
                       <TextInput
                         label="Номер"
                         placeholder="1-555"
