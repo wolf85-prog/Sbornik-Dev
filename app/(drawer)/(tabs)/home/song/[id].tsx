@@ -38,32 +38,7 @@ const chordRegex = /([A-G]{1}[A-Gmjsu0-9/#]{0,4})(?!\w)/g;
 //   )
 // }
 
-const data = [
-  {
-    title: "Добавить в плейлист",
-    action: ()=>alert('dffdf')
-  },
-  {
-      title: "Добавить в категорию",
-      action: ()=>alert('dffdf')
-  },
-  {
-      title: "Добавить заметку",
-      action: ()=>alert('dffdf')
-  },
-  {
-      title: "Тональность",
-      action: ()=>alert('dffdf')
-  },
-  {
-      title: "Размер шрифта",
-      action: ()=>alert('dffdf')
-  },
-  {
-    title: "Настройки",
-    action: ()=>alert('dffdf')
-},
-]
+
 
 
 export default function DetailsScreen() {
@@ -95,7 +70,34 @@ export default function DetailsScreen() {
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
   const scrollOfset = useScrollViewOffset(scrollRef)
 
+  const [showFullPage, setShowFullPage] = useState(false);
   
+  const data = [
+    {
+      title: "Добавить в плейлист",
+      action: ()=>alert('dffdf')
+    },
+    {
+        title: "Добавить в категорию",
+        action: ()=>alert('dffdf')
+    },
+    {
+        title: "Добавить заметку",
+        action: ()=>alert('dffdf')
+    },
+    {
+        title: "Тональность",
+        action: ()=>alert('dffdf')
+    },
+    {
+        title: "Размер шрифта",
+        action: ()=>setVisibleFontSize(true)
+    },
+    {
+      title: "Настройки",
+      action: ()=>router.push("/settings")
+  },
+  ]
 
   const hideDialog = () => setVisibleNumber(false);
 
@@ -142,7 +144,7 @@ export default function DetailsScreen() {
       await db.withTransactionAsync(async () => {
         const row = await db.getFirstAsync<Todo>(`SELECT * FROM songs WHERE _id=${id}`);
         //for (const row of allRows) {
-          //console.log(row?.number, row?.name);
+          console.log(row);
 
           const song = {
             uid: row?._id,
@@ -239,7 +241,7 @@ export default function DetailsScreen() {
 
             <TouchableOpacity
               // onPress={()=>router.push("/modal")}
-              onPress={()=>setVisibleFontSize(true)}
+              onPress={onChangeSong}
               style={{marginRight: 20}}
             >
               <Entypo name="note" size={20} color="white" />
@@ -253,7 +255,7 @@ export default function DetailsScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              // onPress={()=>router.push("/modal")}
+              onPress={()=>setShowFullPage(true)}
               style={{marginRight: 20}}
             >
               <SimpleLineIcons name="size-fullscreen" size={20} color="white" />
@@ -270,7 +272,7 @@ export default function DetailsScreen() {
   }
 
   const onChangeSong = ()=> {
-    console.log("change")
+    console.log(songs[0])
     setShowSongText(!showSongText)
     
   }
@@ -314,10 +316,10 @@ export default function DetailsScreen() {
     return (
       <View>
         {parsedText.map((row: any) => (  
-          <Text style={{color: `${row[1]?.color}`}}>
+          <Text style={{color: `${row[1]?.color}`, fontSize: 18}}>
             {row.map((item: any)=> (
               
-              item?.id ? <Text onPress={()=>router.push(`/accords/categoryAcc/accord/${item?.id}`)}>{item ? item.text : ''}</Text>
+              item?.id ? <Text onPress={()=>router.push(`/home/song/accord/${item?.id}`)}>{item ? item.text : ''}</Text>
                 : <Text>{item ? item.text : ''}</Text>
             ))}
           </Text>
@@ -349,6 +351,8 @@ export default function DetailsScreen() {
             //showHideTransition={statusBarTransition}
             //hidden={hidden}
           />
+          {!showFullPage ? 
+          <>
           <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
             <Image 
               style={[styles.image, imageAnimatedStyle]}
@@ -407,8 +411,10 @@ export default function DetailsScreen() {
                     <ScrollView style={styles.scrollStyle}>       
                       <CardSong>
                         <View style={[styles.slide] }>
+                         {showSongText ?
                           <AllText text={page.text}></AllText>
-                          {/* <Text style={[styles.text, {fontSize: 18}]}>{showSongText ? page.text : page.onlytext}</Text> */}
+                          :<Text style={[styles.text, {fontSize: 18}]}>{page.onlytext}</Text>
+                         }
                         </View>
                       </CardSong>        
                     </ScrollView>
@@ -471,6 +477,39 @@ export default function DetailsScreen() {
                 <Button onPress={() => setVisibleFontSize(false)}>ОК</Button>
               </Dialog.Actions>
           </Dialog>
+          </>
+
+          // Текст песни без аккордов
+          :<ScrollView>
+            <View style={{height: 1000}}>
+              <PagerView
+                ref={sliderRef}
+                testID="pager-view"
+                style={styles.pagerView}
+                initialPage={3}
+                pageMargin={10}
+                onPageScroll={onPageScroll}
+                onPageSelected={onPageSelected}
+                onPageScrollStateChanged={onPageScrollStateChanged}
+              >
+                {songs.map((page: any) => (
+                  <View key={page.uid} collapsable={false}>      
+                    <ScrollView style={styles.scrollStyle}>       
+                      <CardSong>
+                        <View style={[styles.slide] }>
+                          <AllText text={page.text}></AllText>
+                          {/* <Text style={[styles.text, {fontSize: 18}]}>{showSongText ? page.text : page.onlytext}</Text> */}
+                        </View>
+                      </CardSong>        
+                    </ScrollView>
+                  </View>
+                  )
+                )}
+              </PagerView>
+            </View>
+          </ScrollView>
+          
+          }
 
         </SafeAreaView>
       </Provider>
