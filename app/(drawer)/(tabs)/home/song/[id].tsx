@@ -4,8 +4,10 @@ import { StatusBar, View, StyleSheet, SafeAreaView, ActivityIndicator, Image, Di
 import { Ionicons, FontAwesome, Entypo, MaterialCommunityIcons, SimpleLineIcons, Fontisto } from '@expo/vector-icons';
 import { Stack } from "expo-router";
 import CardSong from '../../../../../components/ui/CardSong';
-import { Button, Dialog, Portal, TextInput,  Snackbar } from 'react-native-paper';
+import { Button, Dialog, Portal, TextInput,  Snackbar, RadioButton } from 'react-native-paper';
 //import Slider from '@react-native-community/slider';
+import {Slider} from '@miblanchard/react-native-slider';
+
 
 import songsData from './../../../../../data/songsData.js';
 import { PAGES, createPage } from './../../../../../constants/utils';
@@ -28,25 +30,18 @@ const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
 
 // массив слов для выделения
-const selectedWords = ["Hm", "D", "E"]
 const chordRegex = /([A-G]{1}[A-Gmjsu0-9/#]{0,4})(?!\w)/g;
-
-// это компонент выделенного слова
-// const Selected = (text: any) => {
-//   return (
-//     <p style={{color: 'red'}}>{text}</p>
-//   )
-// }
-
-
 
 
 export default function DetailsScreen() {
 
   const db = useSQLiteContext();
 
+  const { id } = useLocalSearchParams();
+
   const router = useRouter();
-  
+
+  const [title, setTitle] = useState<any>('');  
   const [songs, setSongs] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [song, setSong] = useState<any>({});
@@ -59,35 +54,49 @@ export default function DetailsScreen() {
   
   const [visibleNumber, setVisibleNumber] = useState(false);
   const [songNumber, setSongNumber] = useState<any>('');
+  const [playlistName, setPlaylistName] = useState<any>('');
+  const [categoryName, setCategoryName] = useState<any>('');
+  const [noteText, setNoteText] = useState<any>('');
+  const [songTone, setSongTone] = useState<any>(0);
   const [separators, setSeparators] = useState<any>([])
 
   const [visiblePlaylist, setVisiblePlaylist] = useState(false);
+  const [visibleNewPlaylist, setVisibleNewPlaylist] = useState(false);
+
+  const [visibleCategory, setVisibleCategory] = useState(false);
+  const [visibleNewCategory, setVisibleNewCategory] = useState(false);
+  const [visibleNewNote, setVisibleNewNote] = useState(false);
+  const [visibleTone, setVisibleTone] = useState(false);
 
   const [visibleFontSize, setVisibleFontSize] = useState(false);
-  const [textSize, setTextSize] = useState<any>(15);
+  const [textSize, setTextSize] = useState<any>(0.2);
 
   const sliderRef = useRef<PagerView>(null);
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
   const scrollOfset = useScrollViewOffset(scrollRef)
 
   const [showFullPage, setShowFullPage] = useState(false);
+
+  const [visibleSnackBar, setVisibleSnackBar] = useState(false);
+  
+  
   
   const data = [
     {
       title: "Добавить в плейлист",
-      action: ()=>alert('dffdf')
+      action: ()=>setVisiblePlaylist(true)
     },
     {
         title: "Добавить в категорию",
-        action: ()=>alert('dffdf')
+        action: ()=>setVisibleCategory(true)
     },
     {
         title: "Добавить заметку",
-        action: ()=>alert('dffdf')
+        action: ()=>setVisibleNewNote(true)
     },
     {
         title: "Тональность",
-        action: ()=>alert('dffdf')
+        action: ()=>setVisibleTone(true)
     },
     {
         title: "Размер шрифта",
@@ -100,6 +109,13 @@ export default function DetailsScreen() {
   ]
 
   const hideDialog = () => setVisibleNumber(false);
+  const hideDialogNewPlaylst = () => setVisibleNewPlaylist(false);
+  const hideDialogNewCategory = () => setVisibleNewCategory(false);
+  const hideDialogNewNote = () => setVisibleNewNote(false);
+  const hideDialogTone = () => setVisibleTone(false);
+
+  const onToggleSnackBar = () => setVisibleSnackBar(!visibleSnackBar);
+  const onDismissSnackBar = () => setVisibleSnackBar(false);
 
   const imageAnimatedStyle = useAnimatedStyle(()=> {
     return {
@@ -128,8 +144,7 @@ export default function DetailsScreen() {
     }
   })
 
-  const [title, setTitle] = useState<any>('');
-  const { id } = useLocalSearchParams(); 
+  
 
   useEffect(() => {
     setTitle(id)
@@ -459,17 +474,132 @@ export default function DetailsScreen() {
                 <Text>...</Text>
               </Dialog.Content>
               <Dialog.Actions>
+                <Button onPress={() => {
+                  setVisibleNewPlaylist(true)
+                  setVisiblePlaylist(false)
+                }}>Новый</Button>
+
                 <Button onPress={() => setVisiblePlaylist(false)}>Отмена</Button>
                 <Button onPress={() => setVisiblePlaylist(false)}>ОК</Button>
               </Dialog.Actions>
           </Dialog>
+
+          <Dialog visible={visibleNewPlaylist} onDismiss={hideDialogNewPlaylst}>
+              <Dialog.Title>Новый</Dialog.Title>
+              <Dialog.Content>
+                <TextInput
+                  label="Введите название"
+                  placeholder="Введите название"
+                  value={playlistName}
+                  onChangeText={text => setPlaylistName(text)}
+                />
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => setVisibleNewPlaylist(false)}>Отмена</Button>
+                <Button onPress={() => setVisibleNewPlaylist(false)}>Добавить</Button>
+              </Dialog.Actions>
+          </Dialog>
+
+          {/* Добавить в категорию */}
+          <Dialog visible={visibleCategory} onDismiss={hideDialog}>
+              <Dialog.Title>Добавить в категорию</Dialog.Title>
+              <Dialog.Content>
+                <Text>...</Text>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => {
+                  setVisibleNewCategory(true)
+                  setVisibleCategory(false)
+                }}>Новая категория</Button>
+                
+                <Button onPress={() => setVisibleCategory(false)}>Отмена</Button>
+                <Button onPress={() => setVisibleCategory(false)}>ОК</Button>
+              </Dialog.Actions>
+          </Dialog>
+
+          <Dialog visible={visibleNewCategory} onDismiss={hideDialogNewCategory}>
+              <Dialog.Title>Новая категория</Dialog.Title>
+              <Dialog.Content>
+                <TextInput
+                  label="Введите название"
+                  placeholder="Введите название"
+                  value={categoryName}
+                  onChangeText={text => setCategoryName(text)}
+                />
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => setVisibleNewCategory(false)}>Отмена</Button>
+                <Button onPress={() => setVisibleNewCategory(false)}>Добавить</Button>
+              </Dialog.Actions>
+          </Dialog>
+
+          {/* Добавить заметку */}
+          <Dialog visible={visibleNewNote} onDismiss={hideDialogNewNote}>
+              <Dialog.Title>Новая заметка</Dialog.Title>
+              <Dialog.Content>
+                <TextInput
+                  label="Введите текст"
+                  placeholder="Введите текст"
+                  value={noteText}
+                  onChangeText={text => setNoteText(text)}
+                />
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => setVisibleNewNote(false)}>Отмена</Button>
+                <Button onPress={() => {
+                  setVisibleNewNote(false)
+                  onToggleSnackBar()
+                  }}>Добавить</Button>
+              </Dialog.Actions>
+          </Dialog>
+
+          {/* Тональность */}
+          <Dialog visible={visibleTone} onDismiss={hideDialogTone}>
+              <Dialog.Title>Выберите тональность</Dialog.Title>
+              <Dialog.Content>
+                <ScrollView>
+                  <View style={styles.rowTone}>
+                    <Text style={styles.textTone}>0 Dm</Text>
+                    <RadioButton
+                      value="0"
+                      status={ songTone === '0' ? 'checked' : 'unchecked' }
+                      onPress={() => setSongTone('0')}
+                    />
+                  </View>
+
+                  <View style={styles.rowTone}>
+                    <Text style={styles.textTone}>+1 D#m</Text>
+                    <RadioButton
+                      value="1"
+                      status={ songTone === '1' ? 'checked' : 'unchecked' }
+                      onPress={() => setSongTone('1')}
+                    />
+                  </View>   
+                </ScrollView>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => {
+                  setVisibleTone(false)
+
+                  }}>Отмена</Button>
+              </Dialog.Actions>
+          </Dialog>
   
-          <Dialog visible={visibleFontSize} onDismiss={hideDialog}>
+          <Dialog visible={visibleFontSize} onDismiss={hideDialog} style={{backgroundColor: '#fff'}}>
               <Dialog.Title>Размер текста</Dialog.Title>
               <Dialog.Content>
                 <View style={{alignItems: 'center'}}>
                   <Text style={styles.text}>{textSize}</Text>
-
+                  <Slider
+                    minimumValue={0}
+                    maximumValue={50}
+                    minimumTrackTintColor="#3f3f3f"
+                    maximumTrackTintColor="#000"
+                    step={1}
+                    value={textSize}
+                    onValueChange={value => setTextSize(value)}
+                  />
+                  {/* <Slider style={{width: 200, height: 40}} minimumValue={0} maximumValue={1}/> */}
                 </View>
               </Dialog.Content>
               <Dialog.Actions>
@@ -510,6 +640,19 @@ export default function DetailsScreen() {
           </ScrollView>
           
           }
+
+
+          <Snackbar
+            visible={visibleSnackBar}
+            onDismiss={onDismissSnackBar}
+            action={{
+              label: 'Отмена',
+              onPress: () => {
+                // Do something
+              },
+            }}>
+            Заметка добавлена
+          </Snackbar>
 
         </SafeAreaView>
       </Provider>
@@ -609,5 +752,24 @@ const styles = StyleSheet.create({
 
   chordName: {
     color: 'red',
-  }
+  },
+
+  rowTone: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '90%',
+    marginLeft: 25,
+  },
+
+  textTone: {
+    color: '#fff',
+  },
+
+  slider: {
+    width: 300,
+    opacity: 1,
+    marginTop: 10,
+  },
 });

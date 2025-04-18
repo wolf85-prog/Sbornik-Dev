@@ -16,12 +16,13 @@ export default function AccordPage() {
   const [codeAcc, setCodeAcc] = useState('');
   const [bareAcc, setBareAcc] = useState('');
   const [ladAcc, setLadAcc] = useState('');
+
   const { accord } = useLocalSearchParams(); 
   
   useEffect(() => {
-      console.log("codeAcc: ", codeAcc)
+      console.log("Acc: ", accord)
         
-    }, [codeAcc])
+    }, [accord])
 
   useEffect(() => {
     const fetch = (async()=> {
