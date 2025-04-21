@@ -13,7 +13,11 @@ export default function CustomDrawerContent(props:any) {
     const navigation = useNavigation();
 
     const closeDrawer = ()=>{
-        navigation.dispatch(DrawerActions.closeDrawer())
+      console.log("close app")
+      //navigation.dispatch(DrawerActions.closeDrawer())
+      //throw {};
+      alert('Выход из приложения')
+
     }
   return (
     <View style={{flex: 1, padding: 0}}>
@@ -31,7 +35,7 @@ export default function CustomDrawerContent(props:any) {
       <Pressable onPress={closeDrawer} style={{padding: 20, paddingBottom: bottom+10}}>
         <View style={styles.menu}>
           {/* <Image source={require('./../assets/icons/eye.png')}  style={{ width: 25, height: 25, }} /> */}
-          <Ionicons name='exit-outline' style={{ width: 25, height: 25, }} />
+          <Ionicons name='exit-outline' size={25} />
           <Text>Выход</Text>
         </View>
         
