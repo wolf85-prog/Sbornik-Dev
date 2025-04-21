@@ -87,7 +87,7 @@ const PlaylistScreen = () => {
 export default PlaylistScreen
 
 export function Content() {
-  const db = useSQLiteContext();
+  //const db = useSQLiteContext();
 
   const router = useRouter();
   
@@ -124,10 +124,19 @@ export function Content() {
 
   useEffect(() => {
     setIsLoading(true);
+
     const fetch = (async()=> {
+
+      const db = await SQLite.openDatabaseAsync('myLocalDatabase');
+
+      await db.execAsync(`
+        PRAGMA journal_mode = WAL;
+        CREATE TABLE IF NOT EXISTS playlists (id INTEGER PRIMARY KEY NOT NULL, uid TEXT, nameList TEXT NOT NULL);
+      `);
 
       await db.withTransactionAsync(async () => {
         const allRows = await db.getAllAsync('SELECT * FROM playlists');
+        console.log("allRows: ", allRows)
         const playlist = allRows.map((row) => ({
           uid: row._id,
           name: row.nameList,
@@ -183,6 +192,27 @@ export function Content() {
     //   );
     // })
   };
+
+  const addPlaylist = async (textInputValue)=> {
+    const newValue = {
+      uid: Date.now().toString(),
+      name: textInputValue,
+    };
+    setPlaylists([...playlists, newValue]);
+
+    setDialog({
+      isVisible: false,
+      customer: {},
+    });
+
+    // Insert new customer into the database
+    await db.withTransactionAsync(async () => {
+      await db.execAsync(
+        `INSERT INTO playlists (uid, name) values (?, ?)`, 
+        [newValue.uid, newValue.name]
+      );
+    })
+  }
 
   // Function to delete a customer
   const deleteCustomer = async (customer) => {
@@ -263,7 +293,7 @@ export function Content() {
   }
 
   const onButtonAdd = ()=> {
-    console.log("press")
+    console.log("press add playlist")
     showDialog()
     
   }
@@ -275,7 +305,7 @@ export function Content() {
         style={styles.listSongs}
         data={playlists}
         renderItem={({ item }) => <Item item={item}/>}
-        keyExtractor={item => item.number}
+        keyExtractor={item => item.uid}
         // ItemSeparatorComponent={() => <View style={{height: 15}} />}
         contentContainerStyle={{  flexGrow: 1,  gap: 15 }}
         // columnWrapperStyle={{ gap: GAP_BETWEEN_COLUMNS }}
@@ -303,25 +333,7 @@ export function Content() {
           <Dialog.Actions>
             <Button onPress={() => hideDialog(dialog.customer)}>Отмена</Button>
             <Button 
-              onPress={() => {
-                const newValue = {
-                  uid: Date.now().toString(),
-                  name: textInputValue,
-                };
-                setPlaylists([...playlists, newValue]);
-                setDialog({
-                  isVisible: false,
-                  customer: {},
-                });
-                // Insert new customer into the database
-                // I-insert ang bagong customer sa database
-                // db.transaction((tx) => {
-                //   tx.executeSql(
-                //     "insert into customers (uid, name) values(?, ?)",
-                //     [newValue.uid, newValue.name]
-                //   );
-                // });
-              }}
+              onPress={() => addPlaylist(playlistTitle)}
             >Добавить
             </Button>
           </Dialog.Actions>

@@ -5,11 +5,8 @@ import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons';
 import { Snackbar } from 'react-native-paper';
 
-//import * as SQLite from 'expo-sqlite';
-import React, { useContext } from 'react'
-import { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react'
 
-//import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import {
   Provider,
 } from "react-native-paper";
@@ -20,6 +17,7 @@ const PlaceholderImage = require('@/assets/images/background-image.png');
 import songsData from './../../../../data/songsData.js';
 //import { ThemeContext } from "@react-navigation/native";
 import { ThemeContext } from "./../../../../context/ThemeContext.tsx"
+import { useUserContext } from "./../../../../context/SongContext.tsx"
 import { COLORS } from "../../../../constants/colors.js";
 import PopupMenu from "../../../../components/ui/PopupMenu.js";
 
@@ -29,7 +27,7 @@ const loadDatabase = async()=> {
 }
 
 export default function Index() {
-  const {currentTheme} = useContext(ThemeContext)
+  const {currentTheme} = useContext(ThemeContext)  
 
   const router = useRouter();
 
@@ -75,6 +73,8 @@ export function Content() {
   //const db = useSQLiteContext();
 
   const router = useRouter();
+
+  //const {songs, setSongs} = useUserContext()
 
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('')

@@ -9,6 +9,8 @@ import { useEffect } from 'react';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { StatusBar } from 'expo-status-bar';
+import { ThemeContext } from '@/context/ThemeContext';
+import { SongContext } from '@/context/SongContext';
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -18,9 +20,9 @@ export default function App() {
   });
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    // <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Redirect href="/(drawer)/(tabs)/home" />
-    </ThemeProvider>
+    // </ThemeProvider>
     
   )
 }
