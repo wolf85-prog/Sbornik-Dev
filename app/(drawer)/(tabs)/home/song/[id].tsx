@@ -323,9 +323,9 @@ export default function DetailsScreen() {
       const rowArr = row.split(chordRegex).map((charOrSpace: any) => {
         if (chordRegex.test(charOrSpace)) {
           //console.log({text: charOrSpace, color: 'blue'} )
-          return {text: charOrSpace.trim(), color: 'blue', id: '1'} 
+          return {text: charOrSpace.trim(), color: 'blue', id: '1', uid: Date.now()} 
         }
-        return {text: charOrSpace, color: '', id: ''} ;
+        return {text: charOrSpace, color: '', id: '', uid: Date.now()} ;
       });
   
       //console.log(rowArr)
@@ -335,14 +335,14 @@ export default function DetailsScreen() {
     return (
       <View>
         {parsedText.map((row: any) => (  
-          <Text style={{color: `${row[1]?.color}`, fontSize: 18}}>
-            {row.map((item: any)=> (
+          <Text key={row.uid} style={{color: `${row[1]?.color}`, fontSize: 18}}>
+            {/* {row.map((item: any)=> (
               
-              item?.id ? <Text onPress={()=>router.push(`/home/song/accord/${item?.id}`)}>{item ? item.text : ''}</Text>
-                : <Text>{item ? item.text : ''}</Text>
-            ))}
+              item?.id ? <Text key={item?.uid} onPress={()=>router.push(`/home/song/accord/${item?.id}`)}>{item ? item.text : ''}</Text>
+                : <Text key={item?.uid}>{item ? item.text : ''}</Text>
+            ))} */}
           </Text>
-         )
+         ) 
         )}
       </View>
     )
@@ -594,7 +594,7 @@ export default function DetailsScreen() {
               <Dialog.Content>
                 <View style={{alignItems: 'center'}}>
                   <Text style={styles.text}>{textSize}</Text>
-                  <Slider
+                  {/* <Slider
                     style={styles.slider}
                     minimumValue={MIN_HEIGHT}
                     maximumValue={MAX_HEIGHT}
@@ -602,7 +602,7 @@ export default function DetailsScreen() {
                     maximumTrackTintColor="#000000"
                     onValueChange={(value) => setTextSize(Math.round(value))}
                     value={textSize}
-                  />
+                  /> */}
                   {/* <Slider
                     minimumValue={0}
                     maximumValue={50}
