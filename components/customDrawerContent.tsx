@@ -21,7 +21,7 @@ export default function CustomDrawerContent(props:any) {
     }
   return (
     <View style={{flex: 1, padding: 0}}>
-      <DrawerContentScrollView {...props} scrollEnabled={false}>
+      <DrawerContentScrollView {...props} scrollEnabled={false} contentContainerStyle={{backgroundColor: '#ddef3e'}}>
         <View>
             <Image
               style={{width: 350, height: 205}}
