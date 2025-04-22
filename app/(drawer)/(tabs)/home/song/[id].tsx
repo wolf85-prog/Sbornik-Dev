@@ -5,8 +5,8 @@ import { Ionicons, FontAwesome, Entypo, MaterialCommunityIcons, SimpleLineIcons,
 import { Stack } from "expo-router";
 import CardSong from '../../../../../components/ui/CardSong';
 import { Button, Dialog, Portal, TextInput,  Snackbar, RadioButton } from 'react-native-paper';
-//import Slider from '@react-native-community/slider';
-import {Slider} from '@miblanchard/react-native-slider';
+import Slider from '@react-native-community/slider';
+//import {Slider} from '@miblanchard/react-native-slider';
 
 
 import songsData from './../../../../../data/songsData.js';
@@ -29,8 +29,12 @@ import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewO
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
 
+const MIN_HEIGHT = 50;
+const MAX_HEIGHT = 250;
+
 // массив слов для выделения
 const chordRegex = /([A-G]{1}[A-Gmjsu0-9/#]{0,4})(?!\w)/g;
+
 
 
 export default function DetailsScreen() {
@@ -591,6 +595,15 @@ export default function DetailsScreen() {
                 <View style={{alignItems: 'center'}}>
                   <Text style={styles.text}>{textSize}</Text>
                   <Slider
+                    style={styles.slider}
+                    minimumValue={MIN_HEIGHT}
+                    maximumValue={MAX_HEIGHT}
+                    minimumTrackTintColor="#9a5871"
+                    maximumTrackTintColor="#000000"
+                    onValueChange={(value) => setTextSize(Math.round(value))}
+                    value={textSize}
+                  />
+                  {/* <Slider
                     minimumValue={0}
                     maximumValue={50}
                     minimumTrackTintColor="#3f3f3f"
@@ -598,7 +611,7 @@ export default function DetailsScreen() {
                     step={1}
                     value={textSize}
                     onValueChange={value => setTextSize(value)}
-                  />
+                  /> */}
                   {/* <Slider style={{width: 200, height: 40}} minimumValue={0} maximumValue={1}/> */}
                 </View>
               </Dialog.Content>
