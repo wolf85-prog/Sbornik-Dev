@@ -21,10 +21,10 @@ export default function CustomDrawerContent(props:any) {
     }
   return (
     <View style={{flex: 1, padding: 0}}>
-      <DrawerContentScrollView {...props} scrollEnabled={false} contentContainerStyle={{backgroundColor: '#ddef3e'}}>
-        <View>
+      <DrawerContentScrollView {...props} scrollEnabled={false}>
+        <View style={{ paddingLeft: 0}}>
             <Image
-              style={{width: 350, height: 205}}
+              style={{width: 350, height: 215, marginBottom: 15}}
               source={images.header}
               resizeMode="cover"
             />

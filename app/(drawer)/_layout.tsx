@@ -24,9 +24,10 @@ export default function DrawerLayout() {
                     backgroundColor: '#f3f3f3',
                 },
 
-                drawerActiveBackgroundColor: 'gray',
-                drawerActiveTintColor: 'black',
-                drawerInactiveTintColor: 'black'
+                drawerActiveBackgroundColor: '#5363df',
+                drawerActiveTintColor: '#fff',
+                drawerInactiveTintColor: 'black',
+                drawerHideStatusBarOnOpen: false,
             }}
             drawerContent={CustomDrawerContent}
         >
